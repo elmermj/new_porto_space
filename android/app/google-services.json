@@ -1,0 +1,130 @@
+{
+  "project_info": {
+    "project_number": "394370264308",
+    "project_id": "porto-space-app",
+    "storage_bucket": "porto-space-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394370264308:android:6be032b1045bfa903cc2a1",
+        "android_client_info": {
+          "package_name": "com.example.new_porto_space"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394370264308-46atkl5majpm9c4es1dborsaf9heuuns.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.new_porto_space",
+            "certificate_hash": "38e9b6312655fcc8089bd46eb0cfdd4a50d488ad"
+          }
+        },
+        {
+          "client_id": "394370264308-ocm286giqr0irkitj4l8ak38okgun2ji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.new_porto_space",
+            "certificate_hash": "f5446a52aaa59687120af3a34734242b2a907e32"
+          }
+        },
+        {
+          "client_id": "394370264308-thr0otheisasgft6n1lqlrcih2b52008.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.new_porto_space",
+            "certificate_hash": "14f96bdbf36198b3e6b66b4c6ad0dade2c19cd9b"
+          }
+        },
+        {
+          "client_id": "394370264308-jvhdcheukol0av8tc154prt2rvh4ks8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBG-rp2_-Qgyq0fNahPsSL-rPYb2gjZOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394370264308-jvhdcheukol0av8tc154prt2rvh4ks8l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "394370264308-1jr8jpo0hmoq8jb4fjfia2lad05nkvj4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.careerSpace"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394370264308:android:b552e65611fed7483cc2a1",
+        "android_client_info": {
+          "package_name": "com.example.porto_space"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394370264308-a6lnckpgd2cmm22ot9jvh0knk7fqb200.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.porto_space",
+            "certificate_hash": "38e9b6312655fcc8089bd46eb0cfdd4a50d488ad"
+          }
+        },
+        {
+          "client_id": "394370264308-pvnm6d6tgdlrfgmilcufuc5ukk973ohd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.porto_space",
+            "certificate_hash": "14f96bdbf36198b3e6b66b4c6ad0dade2c19cd9b"
+          }
+        },
+        {
+          "client_id": "394370264308-v078mbldu81gv604e0b8l5o1too6uuh6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.porto_space",
+            "certificate_hash": "f5446a52aaa59687120af3a34734242b2a907e32"
+          }
+        },
+        {
+          "client_id": "394370264308-jvhdcheukol0av8tc154prt2rvh4ks8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBG-rp2_-Qgyq0fNahPsSL-rPYb2gjZOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394370264308-jvhdcheukol0av8tc154prt2rvh4ks8l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "394370264308-1jr8jpo0hmoq8jb4fjfia2lad05nkvj4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.careerSpace"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
