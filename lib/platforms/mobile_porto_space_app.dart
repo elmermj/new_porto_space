@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_screen.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/welcome/mobile_welcome_view.dart';
 
 import 'mobile_views/entry/mobile_entry_view.dart';

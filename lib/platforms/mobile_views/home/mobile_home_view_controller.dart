@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:new_porto_space/main.dart';
@@ -32,6 +33,13 @@ class MobileHomeViewController extends GetxController{
     if (res.docs.isNotEmpty) {
       Get.to(()=>MobileAddContactView);
     }
+  }
+
+  uploadMyBluetoothInformationToFirestore() async {
+    final adapterName = await FlutterBluePlus.adapterName;
+    final vara = FlutterBluePlus.adapterStateNow;
+    logGreen(adapterName);
+    logGreen(vara.name);
   }
 
   @override

@@ -27,6 +27,7 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
       child: Scaffold(
         backgroundColor: kDefaultIconDarkColor,
         drawer: Drawer(
+          width: Get.width*0.8,
           backgroundColor: Colors.grey[900],
           child: Container(
             color: Colors.grey[900],
@@ -41,7 +42,14 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                     title: Text('Nearby'),
                     subtitle: Text('Allows you to connect to nearby devices'),
                   )
-                )
+                ),
+                TextButton(
+                  onPressed: ()=>controller.uploadMyBluetoothInformationToFirestore(), 
+                  child: const ListTile(
+                    title: Text('Update Bluetooth'),
+                    subtitle: Text('Allows you to update your bluetooth information'),
+                  )
+                ),
               ],
             ),
           ),
@@ -83,11 +91,10 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                   leading: IconButton(
                     icon: const Icon(Icons.menu),
                     onPressed: () {
-                      showSnackBar(
-                        title: 'Menu',
-                        message: 'This feature is not implemented yet',
-                        duration: const Duration(seconds: 5),
-                      );
+                      //open the drawer
+                      Scaffold.of(context).isDrawerOpen? 
+                      Scaffold.of(context).closeDrawer():
+                      Scaffold.of(context).openDrawer();
                     },
                   ),
                   title: controller.isSearchFieldActive.value?

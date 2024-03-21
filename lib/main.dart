@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
@@ -84,23 +85,8 @@ Future<void> requestPermissions() async {
       statuses[Permission.storage] != PermissionStatus.granted ||
       statuses[Permission.microphone] != PermissionStatus.granted) {
     // Handle denied permissions
-    showDialog(
-      context: Get.context!,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Permission Denied'),
-          content: const Text('Please grant all the required permissions to use this app.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+    logRed('Permissions not granted');
+    return;
   }
 }
 
@@ -134,7 +120,7 @@ Future<void> main() async {
     exit(1);
   } else {
     if(Platform.isAndroid || Platform.isIOS){     
-      await requestPermissions(); 
+      await requestPermissions();
       runApp(
         MobilePortoSpaceApp(
           isNewAppValue: isNewAppValue,

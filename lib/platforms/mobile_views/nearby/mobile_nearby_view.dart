@@ -90,19 +90,22 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
                       fontSize: 20,
                     ),
                   ),
-                  expandedHeight: 180.0,
+                  expandedHeight: 360.0,
                   flexibleSpace: const FlexibleSpaceBar(
                     collapseMode: CollapseMode.parallax,
                     centerTitle: true,
                     expandedTitleScale: 1,
                     background: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        rive.RiveAnimation.asset('assets/animation/location_icon.riv', fit: BoxFit.fitHeight,),
-                        Text(
-                          "Other users will notice your presence once they ping and you're in their search radius.\n Other users must enable their hotspot in order for your device to detect.",
-                          textAlign: TextAlign.center,
+                        Expanded(flex:3, child: rive.RiveAnimation.asset('assets/animation/location_icon.riv', fit: BoxFit.contain, alignment: Alignment.center,)),
+                        Expanded(
+                          child: Text(
+                            "Other users will notice your presence once they ping and you're in their search radius.\n Other users must enable their hotspot in order for your device to detect.",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
