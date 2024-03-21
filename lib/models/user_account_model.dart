@@ -36,17 +36,17 @@ class UserAccountModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['username'] = this.username;
-    data['full_name'] = this.fullName;
-    data['birthdate'] = this.birthdate;
-    data['email'] = this.email;
-    data['location'] = this.location;
-    data['bio'] = this.bio;
-    data['followers'] = this.followers;
-    data['profile_picture'] = this.profilePicture;
-    data['interests'] = this.interests;
-    data['last_login'] = this.lastLogin;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['username'] = username;
+    data['full_name'] = fullName;
+    data['birthdate'] = birthdate;
+    data['email'] = email;
+    data['location'] = location;
+    data['bio'] = bio;
+    data['followers'] = followers;
+    data['profile_picture'] = profilePicture;
+    data['interests'] = interests;
+    data['last_login'] = lastLogin;
     return data;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class WelcomeScreenController extends GetxController{
+class WelcomeViewController extends GetxController{
 
   @override
   void onInit() {

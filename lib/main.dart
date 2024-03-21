@@ -87,7 +87,7 @@ Future<void> main() async {
     logRed('Web is not supported yet');
     exit(1);
   } else {
-    if(Platform.isAndroid || Platform.isIOS){
+    if(Platform.isAndroid || Platform.isIOS){      
       runApp(
         MobilePortoSpaceApp(
           isNewAppValue: isNewAppValue,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_porto_space/screens/add_contact/add_contact_screen_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/add_contact/mobile_add_contact_view_controller.dart';
 
-class AddContactScreen extends GetView<AddContactScreenController> {
-  AddContactScreen({super.key});
+class MobileAddContactView extends GetView<MobileAddContactViewController> {
+  MobileAddContactView({super.key});
 
   @override
-  final AddContactScreenController controller = Get.put(AddContactScreenController());
+  final MobileAddContactViewController controller = Get.put(MobileAddContactViewController());
 
   @override
   Widget build(BuildContext context) {

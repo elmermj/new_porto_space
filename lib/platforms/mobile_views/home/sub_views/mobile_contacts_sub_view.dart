@@ -3,17 +3,17 @@ import 'package:get/get.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/constant.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
-import 'package:new_porto_space/screens/home/home_screen_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 import 'package:new_porto_space/utils/dummydata.dart';
 
-class ContactsSubscreen extends StatelessWidget {
-  const ContactsSubscreen({
+class MobileContactsSubView extends StatelessWidget {
+  const MobileContactsSubView({
     super.key,
     required this.controller,
     required this.userAccountList,
   });
 
-  final HomeScreenController controller;
+  final MobileHomeViewController controller;
   final List<UserAccountModel> userAccountList;
 
   @override
@@ -30,6 +30,7 @@ class ContactsSubscreen extends StatelessWidget {
               width: Get.width,
               color: Colors.black,
               child: ListView.builder(
+                clipBehavior: Clip.hardEdge,
                 itemCount: dummydata.length,
                 itemBuilder: (context, index){
                   return ListTile(

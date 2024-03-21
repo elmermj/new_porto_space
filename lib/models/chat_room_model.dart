@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:new_porto_space/models/message_model.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 1)
 class ChatRoomModel extends HiveObject {
   @HiveField(0)
   String? roomId;
@@ -38,7 +38,7 @@ class ChatRoomModel extends HiveObject {
 
 class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel>{
   @override
-  final typeId = 0;
+  final typeId = 1;
 
   @override
   ChatRoomModel read(BinaryReader reader) {

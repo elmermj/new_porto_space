@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 import 'user_notification.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 0)
 class UserModel extends HiveObject{
   @HiveField(0)
   String? name;

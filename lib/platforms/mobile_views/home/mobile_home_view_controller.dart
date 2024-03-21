@@ -8,9 +8,9 @@ import 'package:hive/hive.dart';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
 
-import '../add_contact/add_contact_screen.dart';
+import '../add_contact/mobile_add_contact_view.dart';
 
-class HomeScreenController extends GetxController{
+class MobileHomeViewController extends GetxController{
   
   //dynamic declaration
   RxString username = ''.obs;
@@ -30,7 +30,7 @@ class HomeScreenController extends GetxController{
     var res = await store.collection('users').where('id', isEqualTo: id).get();
 
     if (res.docs.isNotEmpty) {
-      Get.to(()=>AddContactScreen());
+      Get.to(()=>MobileAddContactView);
     }
   }
 
@@ -54,6 +54,7 @@ class HomeScreenController extends GetxController{
         logYellow("newMargin VALUE ::: $newMargin");
         margin.value = newMargin;
         logYellow("MARGIN VALUE ::: ${margin.value}");
+        logRed('============================================');
       }
     });
 

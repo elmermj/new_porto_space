@@ -1,14 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_porto_space/screens/entry/entry_screen.dart';
-import 'package:new_porto_space/screens/welcome/welcome_screen_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/mobile_entry_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/welcome/mobile_welcome_view_controller.dart';
 
-class WelcomeScreen extends GetView<WelcomeScreenController> {
-  WelcomeScreen({super.key});
+class MobileWelcomeView extends GetView<WelcomeViewController> {
+  MobileWelcomeView({super.key});
 
   @override
-  final WelcomeScreenController controller = Get.put(WelcomeScreenController());
+  final WelcomeViewController controller = Get.put(WelcomeViewController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class WelcomeScreen extends GetView<WelcomeScreenController> {
               0.75
             ),
             child: ElevatedButton(
-              onPressed: ()=>Get.to(()=> EntryScreen()), 
+              onPressed: ()=>Get.to(()=> MobileEntryView()), 
               child: const AutoSizeText('Get Started')
             ),
           )

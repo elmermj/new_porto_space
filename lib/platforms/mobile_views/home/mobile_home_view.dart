@@ -4,17 +4,17 @@ import 'package:get/get.dart';
 import 'package:new_porto_space/components/flexible_bar.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
-import 'package:new_porto_space/screens/home/home_screen_controller.dart';
-import 'package:new_porto_space/screens/nearby/nearby_screen.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/nearby/mobile_nearby_view.dart';
 import 'package:new_porto_space/utils/dummydata.dart';
 
-import 'subscreens.dart/subscreen_index.dart';
+import 'sub_views/mobile_sub_view_index.dart';
 
-class HomeScreen extends GetView<HomeScreenController> {
-  HomeScreen({super.key});
+class MobileHomeView extends GetView<MobileHomeViewController> {
+  MobileHomeView({super.key});
 
   @override
-  final HomeScreenController controller = Get.put(HomeScreenController());
+  final MobileHomeViewController controller = Get.put(MobileHomeViewController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class HomeScreen extends GetView<HomeScreenController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: ()=>Get.to(()=>NearbyScreen()), 
+                  onPressed: ()=>Get.to(()=>MobileNearbyView()), 
                   child: const ListTile(
                     title: Text('Nearby'),
                     subtitle: Text('Allows you to connect to nearby devices'),
@@ -132,13 +132,13 @@ class HomeScreen extends GetView<HomeScreenController> {
               body: Obx(() {
                 switch(controller.index.value){
                   case 0:
-                    return TimelineSubscreen(controller: controller, userAccountList: userAccountList);
+                    return MobileTimelineSubView(controller: controller, userAccountList: userAccountList);
                   case 1:
-                    return ChatsSubscreen(controller: controller);
+                    return MobileChatsSubView(controller: controller);
                   case 2:
-                    return ContactsSubscreen(controller: controller, userAccountList: userAccountList);
+                    return MobileContactsSubView(controller: controller, userAccountList: userAccountList);
                   default:
-                    return ProfileSubscreen(controller: controller,);
+                    return MobileProfileSubView(controller: controller,);
                 }
               })
             ),

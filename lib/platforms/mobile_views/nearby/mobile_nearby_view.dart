@@ -4,16 +4,15 @@ import 'package:get/get.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/constant.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
+import 'package:new_porto_space/platforms/mobile_views/nearby/mobile_nearby_view_controller.dart';
 import 'package:new_porto_space/utils/dummydata.dart';
 import 'package:rive/rive.dart' as rive;
 
-import 'nearby_screen_controller.dart';
-
-class NearbyScreen extends GetView<NearbyScreenController> {
-  NearbyScreen({super.key});
+class MobileNearbyView extends GetView<MobileNearbyViewController> {
+  MobileNearbyView({super.key});
 
   @override
-  final NearbyScreenController controller = Get.put(NearbyScreenController());
+  final MobileNearbyViewController controller = Get.put(MobileNearbyViewController());
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class NearbyScreen extends GetView<NearbyScreenController> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton(
-                onPressed: ()=>Get.to(()=>NearbyScreen()), 
+                onPressed: ()=>Get.to(()=>MobileNearbyView()), 
                 child: const ListTile(
                   title: Text('Nearby'),
                   subtitle: Text('Allows you to connect to nearby devices'),

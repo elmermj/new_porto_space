@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_porto_space/screens/home/home_screen_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 
-class ChatsSubscreen extends StatelessWidget {
-  const ChatsSubscreen({
+class MobileChatsSubView extends StatelessWidget {
+  const MobileChatsSubView({
     super.key,
     required this.controller,
   });
   
-  final HomeScreenController controller;
+  final MobileHomeViewController controller;
 
   @override
   Widget build(BuildContext context) {

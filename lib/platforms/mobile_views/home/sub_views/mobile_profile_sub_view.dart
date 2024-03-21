@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_porto_space/models/user_account_model.dart';
-import 'package:new_porto_space/screens/home/home_screen_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 
-class TimelineSubscreen extends StatelessWidget {
-  const TimelineSubscreen({
+class MobileProfileSubView extends StatelessWidget {
+  const MobileProfileSubView({
     super.key,
     required this.controller,
-    required this.userAccountList,
   });
-
-  final HomeScreenController controller;
-  final List<UserAccountModel> userAccountList;
+  
+  final MobileHomeViewController controller;
 
   @override
   Widget build(BuildContext context) {

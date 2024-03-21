@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_screen.dart';
+import 'package:new_porto_space/platforms/mobile_views/welcome/mobile_welcome_view.dart';
 
-import '../screens/entry/entry_screen.dart';
-import '../screens/home/home_screen.dart';
-import '../screens/welcome/welcome_screen.dart';
+import 'mobile_views/entry/mobile_entry_view.dart';
 
 class MobilePortoSpaceApp extends StatelessWidget {
   final bool isNewAppValue;
@@ -19,17 +19,17 @@ class MobilePortoSpaceApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Perform app validation based on the isNewApp flag
     if (isNewAppValue) {
-      // Redirect to WelcomeScreen for new users
+      // Redirect to WelcomeView for new users
       return GetMaterialApp(
         color: Colors.black,
         theme: ThemeData.light(useMaterial3: true),
         darkTheme: ThemeData.dark(useMaterial3: true),
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
-        home: WelcomeScreen(),
+        home: MobileWelcomeView(),
       );
     } else {
-      // Redirect to appropriate screen based on login status
+      // Redirect to appropriate View based on login status
       return GetMaterialApp(
         color: Colors.black,
         theme: ThemeData.light(useMaterial3: true),
@@ -37,8 +37,8 @@ class MobilePortoSpaceApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         home: isLoggedIn
-            ? HomeScreen()
-            : EntryScreen(),
+            ? MobileHomeView()
+            : MobileEntryView(),
       );
     }
   }

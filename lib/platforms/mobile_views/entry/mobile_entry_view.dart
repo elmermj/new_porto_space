@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/components/form_text_field.dart';
 import 'package:new_porto_space/constant.dart';
-import 'package:new_porto_space/screens/entry/entry_screen_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/mobile_entry_view_controller.dart';
 
-class EntryScreen extends GetView<EntryScreenController> {
-  EntryScreen({super.key});
+class MobileEntryView extends GetView<MobileEntryViewController> {
+  MobileEntryView({super.key});
 
   @override
-  final EntryScreenController controller = Get.put(EntryScreenController());
+  final MobileEntryViewController controller = Get.put(MobileEntryViewController());
 
   @override
   Widget build(BuildContext context) {

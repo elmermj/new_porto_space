@@ -6,9 +6,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/screens/home/home_screen.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_screen.dart';
 
-class EntryScreenController extends GetxController{
+class MobileEntryViewController extends GetxController{
 
   //dynamic declaration
   RxBool loginRegister = true.obs; //true = login, false = register
@@ -73,31 +73,34 @@ class EntryScreenController extends GetxController{
       final CollectionReference users = FirebaseFirestore.instance.collection('users');
       if (isNewUser) {
       
-          await users.doc(user.uid).set({
-            'name': user.displayName!,
-            'email': user.email,
-            'createdAt': FieldValue.serverTimestamp(),
-            'lastLoginAt': FieldValue.serverTimestamp(),
-            'deviceToken': deviceToken.value
-          });
-          update();
-      
-          // Get.off(ProfileEditScreen(isNew: true,));
-          Get.off(HomeScreen());
-      
-        }else{
-      
-          await users.doc(user.uid).update({
-            'lastLoginAt': FieldValue.serverTimestamp(),
-            'deviceToken': deviceToken.value
-          });
-          update();
-      
-          Get.off(HomeScreen());
-      
-        }
+        await users.doc(user.uid).set({
+          'name': user.displayName!,
+          'email': user.email,
+          'createdAt': FieldValue.serverTimestamp(),
+          'lastLoginAt': FieldValue.serverTimestamp(),
+          'deviceToken': deviceToken.value
+        });
+        update();
+        if(Get.isSnackbarOpen) Get.back();
+        
+        // Get.off(ProfileEditView(isNew: true,));
+        Get.off(MobileHomeView());
+    
+      }else{
+    
+        await users.doc(user.uid).update({
+          'lastLoginAt': FieldValue.serverTimestamp(),
+          'deviceToken': deviceToken.value
+        });
+        update();
+        if(Get.isSnackbarOpen) Get.back();
+    
+        Get.off(MobileHomeView());
+    
+      }
     } on Exception catch (e) {
       logRed("onGoogleLogin: $e");
+      if(Get.isSnackbarOpen) Get.back();
       showSnackBar(
         title: "Error",
         message: "Something went wrong. $e",
@@ -117,22 +120,51 @@ class EntryScreenController extends GetxController{
         minutes: 1
       )
     );
-    await auth.signInWithProvider(
-      AppleAuthProvider()
-    ).timeout(
-      const Duration(seconds: 55),
-      onTimeout: () {
-        logRed("onAppleLogin: Timeout");
+    try {
+      await auth.signInWithProvider(
+        AppleAuthProvider()
+      ).timeout(
+        const Duration(seconds: 55),
+        onTimeout: () {
+          logRed("onAppleLogin: Timeout");
+          if(Get.isSnackbarOpen) Get.back();
+          showSnackBar(
+            title: "Timeout",
+            message: "Something went wrong. Please try again",
+            duration: const Duration(
+              seconds: 3
+            )
+          );
+          return auth.getRedirectResult();
+        },
+      ).onError((error, stackTrace) {
+        logRed("onAppleLogin: $error");
+        if(Get.isSnackbarOpen) Get.back();
         showSnackBar(
-          title: "Timeout",
-          message: "Something went wrong. Please try again",
+          title: "Error",
+          message: error.toString(),
           duration: const Duration(
             seconds: 3
           )
         );
         return auth.getRedirectResult();
-      },
-    );
+      }).whenComplete(() {
+        logGreen("onAppleLogin: Complete");
+        if(Get.isSnackbarOpen) Get.back();
+        Get.off(MobileHomeView());
+      });
+    } on Exception catch (e) {
+      // TODO
+      logRed("onAppleLogin: $e");
+      if(Get.isSnackbarOpen) Get.back();
+      showSnackBar(
+        title: "Error",
+        message: "Something went wrong. $e",
+        duration: const Duration(
+          seconds: 3
+        )
+      );
+    }
   }
 
   onEmailLogin(String email, String password) async{
@@ -144,13 +176,13 @@ class EntryScreenController extends GetxController{
         minutes: 1
       )
     );
-    await auth.signInWithEmailAndPassword(
-      email: email.trim(),
-      password: password.trim()
-    ).timeout(
-      const Duration(seconds: 55),
-      onTimeout: () {
+    try {
+      await auth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim()
+      ).timeout(const Duration(seconds: 55), onTimeout: () {
         logRed("onEmailLogin: Timeout");
+        if(Get.isSnackbarOpen) Get.back();
         showSnackBar(
           title: "Timeout",
           message: "Something went wrong. Please try again",
@@ -159,9 +191,7 @@ class EntryScreenController extends GetxController{
           )
         );
         return auth.getRedirectResult();
-      },
-    ).onError(
-      (error, stackTrace) {
+      },).onError((error, stackTrace) {
         logRed("onEmailLogin: $error");
         showSnackBar(
           title: "Error",
@@ -171,8 +201,22 @@ class EntryScreenController extends GetxController{
           )
         );
         return auth.getRedirectResult();
-      }
-    );
+      }).whenComplete(() {
+        logGreen("onEmailLogin: Complete");
+        if(Get.isSnackbarOpen) Get.back();
+        Get.off(MobileHomeView());
+      });
+    } on Exception catch (e) {
+      logRed("onEmailLogin: $e");
+      if(Get.isSnackbarOpen) Get.back();
+      showSnackBar(
+        title: "Error",
+        message: "Something went wrong. $e",
+        duration: const Duration(
+          seconds: 3
+        )
+      );
+    }
   }
 
   onEmailSignUp(String email, String password, String confirmPassword) async{
