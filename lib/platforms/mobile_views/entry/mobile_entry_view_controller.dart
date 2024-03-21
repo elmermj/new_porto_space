@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_screen.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 
 class MobileEntryViewController extends GetxController{
 

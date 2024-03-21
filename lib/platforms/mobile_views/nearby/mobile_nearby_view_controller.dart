@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_screen_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 
 class MobileNearbyViewController extends GetxController {
   
