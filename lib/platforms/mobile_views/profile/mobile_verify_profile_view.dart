@@ -58,7 +58,7 @@ class MobileVerifyProfileView extends GetView<MobileProfileController> {
                           margin: EdgeInsets.symmetric(horizontal: Get.width*0.1, vertical: 0),
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 24,24,24),
+                            color: const Color.fromARGB(255, 24,24,24),
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: const Center(
