@@ -12,21 +12,19 @@ class MobileChatsSubView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.only(top: controller.margin.value),
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Container(
-              height: Get.height,
-              width: Get.width,
-              color: Colors.black,
-            )
+    return Obx(
+      ()=> Container(
+        margin: EdgeInsets.only(top: controller.marginBodyTop.value),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            height: Get.height,
+            width: Get.width,
+            color: Colors.black,
           )
         )
-      ],
+      ),
     );
   }
 }

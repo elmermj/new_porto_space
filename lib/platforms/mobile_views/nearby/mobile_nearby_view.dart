@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -24,21 +25,6 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kDefaultIconDarkColor,
-        drawer: Drawer(
-          backgroundColor: Colors.grey[900],
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: ()=>Get.to(()=>MobileNearbyView()), 
-                child: const ListTile(
-                  title: Text('Nearby'),
-                  subtitle: Text('Allows you to connect to nearby devices'),
-                )
-              )
-            ],
-          ),
-        ),
         body: Stack(
           children: [
             Container(
@@ -74,14 +60,8 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
                     statusBarIconBrightness: Brightness.dark,
                   ),
                   leading: IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
-                      showSnackBar(
-                        title: 'Menu',
-                        message: 'This feature is not implemented yet',
-                        duration: const Duration(seconds: 5),
-                      );
-                    },
+                    icon: const Icon(Icons.arrow_back_ios_new),
+                    onPressed: () => Get.back(),
                   ),
                   title: const Text(
                     'Search Nearby User',
@@ -91,25 +71,31 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
                     ),
                   ),
                   expandedHeight: 360.0,
-                  flexibleSpace: const FlexibleSpaceBar(
+                  flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.parallax,
                     centerTitle: true,
                     expandedTitleScale: 1,
-                    background: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(flex:3, child: rive.RiveAnimation.asset('assets/animation/location_icon.riv', fit: BoxFit.contain, alignment: Alignment.center,)),
-                        Expanded(
-                          child: Text(
-                            "Other users will notice your presence once they ping and you're in their search radius.\n Other users must enable their hotspot in order for your device to detect.",
-                            textAlign: TextAlign.center,
+                    background: Container(
+                      margin: const EdgeInsets.only(top: kToolbarHeight),
+                      padding: const EdgeInsets.all(24.0),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(flex:3, child: rive.RiveAnimation.asset('assets/animation/location_icon.riv', fit: BoxFit.contain, alignment: Alignment.center,)),
+                          Expanded(
+                            child: AutoSizeText(
+                              "Other users will notice your presence once they ping and you're in their search radius.\n They must enable their hotspot in order for your device to detect.",
+                              textAlign: TextAlign.center,
+                              minFontSize: 8,
+                              maxFontSize: 12,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    stretchModes: [
+                    stretchModes: const [
                       StretchMode.zoomBackground,
                       // StretchMode.blurBackground,
                       // StretchMode.fadeTitle,
@@ -121,8 +107,8 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
                 () => Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: controller.margin.value),
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      margin: EdgeInsets.only(top: controller.marginBodyTop.value),
+                      padding: const EdgeInsets.fromLTRB(12,0,12,12),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(24),
                         child: Container(

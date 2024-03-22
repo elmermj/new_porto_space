@@ -11,13 +11,13 @@ import 'package:new_porto_space/models/chat_room_model.dart';
 
 import '../add_contact/mobile_add_contact_view.dart';
 
-class MobileHomeViewController extends GetxController{
-  
+class MobileHomeViewController extends GetxController {
   //dynamic declaration
   RxString username = ''.obs;
   RxBool isAppBarExpanded = true.obs;
   RxBool isSearchFieldActive = false.obs;
-  RxDouble margin = 0.0.obs;
+  RxDouble margin = 0.0.obs;  
+  RxDouble marginBodyTop = 0.0.obs;
   RxInt index = 0.obs;
   //static declaration
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -31,7 +31,7 @@ class MobileHomeViewController extends GetxController{
     var res = await store.collection('users').where('id', isEqualTo: id).get();
 
     if (res.docs.isNotEmpty) {
-      Get.to(()=>MobileAddContactView);
+      Get.to(() => MobileAddContactView);
     }
   }
 
@@ -45,38 +45,38 @@ class MobileHomeViewController extends GetxController{
   @override
   Future<void> onInit() async {
     logYellow(auth.currentUser!.displayName!);
+    initializeScrollListener();
     username.value = auth.currentUser!.displayName!;
     await Hive.openBox<ChatRoomModel>(auth.currentUser!.uid);
+  }
 
+  void initializeScrollListener() {
     scrollController.addListener(() {
-      double offset = scrollController.offset;
+      final double offset = scrollController.offset;
+      final double easedValue = offset / 125;
+      final double newMargin = easedValue * 55.0;
 
-      if (offset >= 125) {
-        double normalizedOffset = (offset - 125) / 55.0;
-        normalizedOffset = normalizedOffset.clamp(0.0, 1.0);
-
-        double easedValue = Maths.cubicEaseInOut(normalizedOffset);
-        double newMargin = easedValue * 55.0;
-
-        logYellow("OFFSET VALUE ::: $offset");
-        logYellow("newMargin VALUE ::: $newMargin");
-        margin.value = newMargin;
-        logYellow("MARGIN VALUE ::: ${margin.value}");
-        logRed('============================================');
+      if (newMargin > 55) {
+        double additionalMargin = newMargin - 55;
+        double fraction = additionalMargin / (79.2 - 55); // Calculate fraction of completion
+        marginBodyTop.value = kToolbarHeight * fraction; // Map fraction to range [0, kToolbarHeight]
+      } else {
+        marginBodyTop.value = 0;
       }
+      
+      logYellow("MARGIN VALUE ::: $newMargin");
+      logYellow("MARGINTOPBODY VALUE ::: ${marginBodyTop.value}");
+      logRed('============================================');
     });
-
-    super.onInit();
   }
 }
 
 class Maths {
   static double exponentialEaseInOut(double t) => t == 0.0 || t == 1.0
-    ? t
-    : t < 0.5
-        ? 0.5 * pow(2, (20 * t) - 10)
-        : 1 - 0.5 * pow(2, (-20 * t) + 10);
-  static double cubicEaseInOut(double t) => t < 0.5
-      ? 4 * t * t * t
-      : 0.5 * pow(2 * t - 2, 3) + 1;
+      ? t
+      : t < 0.5
+          ? 0.5 * pow(2, (20 * t) - 10)
+          : 1 - 0.5 * pow(2, (-20 * t) + 10);
+  static double cubicEaseInOut(double t) =>
+      t < 0.5 ? 4 * t * t * t : 0.5 * pow(2 * t - 2, 3) + 1;
 }

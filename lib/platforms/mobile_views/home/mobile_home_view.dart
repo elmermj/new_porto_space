@@ -23,6 +23,7 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
     for(int i = 0; i<dummydata.length;i++){
       userAccountList.add(UserAccountModel.fromJson(dummydata[i]));
     }
+    
     return SafeArea(
       child: Scaffold(
         backgroundColor: kDefaultIconDarkColor,
