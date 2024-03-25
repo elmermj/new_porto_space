@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:get/get.dart';
-import 'package:ndef/ndef.dart' as ndef;
 import 'package:new_porto_space/main.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
@@ -11,10 +9,8 @@ class MobileProfileController extends GetxController {
   NfcManager nfcManager = NfcManager.instance;
   RxString result = ''.obs;
 
-  NFCAvailability _availability = NFCAvailability.not_supported;
   NFCTag? _tag;
-  RxString? _result = ''.obs, _writeResult = ''.obs, _mifareResult = ''.obs;
-  List<ndef.NDEFRecord>? _records;
+  RxString? _result = ''.obs, _mifareResult = ''.obs;
   late StreamController<bool> _nfcStreamController;
   late Stream<bool> _nfcStream;
 
@@ -22,13 +18,6 @@ class MobileProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    //apply the resultStream on the page start
-    // resultStream.listen(
-    //   (data) {
-    //     result.value = data;
-    //     logPink('Result: $data');
-    //   },
-    // );
     _resultStream.listen(
       (data) {
         _result!.value = data;
@@ -38,7 +27,6 @@ class MobileProfileController extends GetxController {
     _initializeNfcStream();
   }
 
-  //make stream to listen to the changes in the value of result
   Stream<String> get resultStream => result.stream;
   Stream<String> get _resultStream => _result!.stream;
 
@@ -46,10 +34,8 @@ class MobileProfileController extends GetxController {
     _nfcStreamController = StreamController<bool>();
     _nfcStream = _nfcStreamController.stream;
 
-    // Start emitting events immediately
     _nfcStreamController.add(true);
 
-    // Listen to the stream and trigger nfcKit function
     _nfcStream.listen((_) {
       nfcKit();
     });
@@ -85,13 +71,12 @@ class MobileProfileController extends GetxController {
       _result!.value = 'error: $e';
     }
 
-    // Pretend that we are working
     await FlutterNfcKit.finish(iosAlertMessage: "Finished!");
   }
 
   @override
   void onClose() {
     super.onClose();
-    _nfcStreamController.close(); // Close the stream controller when the controller is disposed
+    _nfcStreamController.close();
   }
 }

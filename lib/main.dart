@@ -10,6 +10,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
+import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/models/user_model.dart';
 import 'package:new_porto_space/platforms/mobile_porto_space_app.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -89,6 +90,8 @@ Future<void> requestPermissions() async {
     return;
   }
 }
+
+Rx<UserAccountModel> userData = UserAccountModel().obs;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -11,9 +12,12 @@ import 'package:new_porto_space/models/chat_room_model.dart';
 
 import '../add_contact/mobile_add_contact_view.dart';
 
+const platform = MethodChannel('networkInfoChannel');
+
 class MobileHomeViewController extends GetxController {
   //dynamic declaration
   RxString username = ''.obs;
+  RxString userId = ''.obs;
   RxBool isAppBarExpanded = true.obs;
   RxBool isSearchFieldActive = false.obs;
   RxDouble margin = 0.0.obs;  
@@ -36,10 +40,22 @@ class MobileHomeViewController extends GetxController {
   }
 
   uploadMyBluetoothInformationToFirestore() async {
-    final adapterName = await FlutterBluePlus.adapterName;
-    final vara = FlutterBluePlus.adapterStateNow;
-    logGreen(adapterName);
-    logGreen(vara.name);
+    // final adapterName = await FlutterBluePlus.adapterName;
+    // final vara = FlutterBluePlus.adapterStateNow;
+    // logGreen(adapterName);
+    // logGreen(vara.name);
+    try {
+      // Invoke platform channel method to get network info
+      String networkInfo = await platform.invokeMethod('getNetworkInfo');
+      print(networkInfo);
+    } on PlatformException catch (e) {
+      print("Failed to get network info: '${e.message}'.");
+    }
+  }
+
+  getChatListDataFromFirestore() async {
+    
+    
   }
 
   @override
@@ -68,6 +84,10 @@ class MobileHomeViewController extends GetxController {
       logYellow("MARGINTOPBODY VALUE ::: ${marginBodyTop.value}");
       logRed('============================================');
     });
+  }
+
+  void getUsersData() {
+    
   }
 }
 

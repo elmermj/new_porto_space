@@ -23,6 +23,7 @@ class MobileNearbyViewController extends GetxController {
     scanningString.value = "List of devices";
     FlutterBluePlus.scanResults.listen((results) {
       for (ScanResult result in results) {
+        logPink(result.toString());
         if (!nearbyDevices.contains(result.device)) {
           nearbyDevices.add(result.device);
         }
@@ -55,6 +56,13 @@ class MobileNearbyViewController extends GetxController {
       logYellow("MARGINTOPBODY VALUE ::: ${marginBodyTop.value}");
       logRed('============================================');
     });
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    FlutterBluePlus.stopScan();
+    nearbyDevices.clear();
   }
 
 }

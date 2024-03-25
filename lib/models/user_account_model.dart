@@ -1,52 +1,69 @@
 class UserAccountModel {
   String? username;
   String? fullName;
-  String? birthdate;
+  String? dob;
   String? email;
-  String? location;
-  String? bio;
+  String? city;
+  String? profileDesc;
   int? followers;
   String? profilePicture;
-  String? interests;
+  List<String>? interests;
   String? lastLogin;
+  String? currentCompany;
+  String? currentOccupation;
+  String? photoUrl;
+  Map<String, dynamic>? userSettings;
 
-  UserAccountModel(
-      {this.username,
-      this.fullName,
-      this.birthdate,
-      this.email,
-      this.location,
-      this.bio,
-      this.followers,
-      this.profilePicture,
-      this.interests,
-      this.lastLogin});
+  UserAccountModel({
+    this.username,
+    this.fullName,
+    this.dob,
+    this.email,
+    this.city,
+    this.profileDesc,
+    this.followers,
+    this.profilePicture,
+    this.interests,
+    this.lastLogin,
+    this.currentCompany,
+    this.currentOccupation,
+    this.photoUrl,
+    this.userSettings,
+  });
 
   UserAccountModel.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     fullName = json['full_name'];
-    birthdate = json['birthdate'];
+    dob = json['birthdate'];
     email = json['email'];
-    location = json['location'];
-    bio = json['bio'];
+    city = json['location'];
+    profileDesc = json['profileDesc'];
     followers = json['followers'];
     profilePicture = json['profile_picture'];
     interests = json['interests'];
     lastLogin = json['last_login'];
+    currentCompany = json['currentCompany'];
+    currentOccupation = json['currentOccupation'];
+    photoUrl = json['photoUrl'];
+    userSettings = json['userSettings'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['username'] = username;
     data['full_name'] = fullName;
-    data['birthdate'] = birthdate;
+    data['birthdate'] = dob;
     data['email'] = email;
-    data['location'] = location;
-    data['bio'] = bio;
+    data['location'] = city;
+    data['bio'] = profileDesc;
     data['followers'] = followers;
     data['profile_picture'] = profilePicture;
     data['interests'] = interests;
     data['last_login'] = lastLogin;
+    data['currentCompany'] = currentCompany;
+    data['currentOccupation'] = currentOccupation;
+    data['photoUrl'] = photoUrl;
+    data['userSettings'] = userSettings;
     return data;
   }
 }

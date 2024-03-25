@@ -116,14 +116,14 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
                           width: Get.width,
                           color: Colors.black,
                           child: ListView.builder(
-                            itemCount: dummydata.length,
+                            itemCount: controller.nearbyDevices.length,
                             itemBuilder: (context, index){
                               return ListTile(
-                                leading: CircleAvatar(
-                                  child: Image.network(userAccountList[index].profilePicture!),
-                                ),
-                                title: Text(userAccountList[index].username!),
-                                subtitle: Text(userAccountList[index].email!),
+                                // leading: CircleAvatar(
+                                //   child: Image.network(userAccountList[index].profilePicture!),
+                                // ),
+                                title: Text(controller.nearbyDevices[index].name),
+                                subtitle: Text(controller.nearbyDevices[index].platformName),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.more_vert),
                                   onPressed: () {
@@ -160,6 +160,12 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => controller.startScanning(),
+          backgroundColor: positiveColor,
+          child: const Icon(Icons.search),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       )
     );
   }

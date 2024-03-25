@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/main.dart';
+import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/profile/mobile_profile_edit_view.dart';
 
 class MobileEntryViewController extends GetxController{
 
@@ -81,10 +85,15 @@ class MobileEntryViewController extends GetxController{
           'deviceToken': deviceToken.value
         });
         update();
+        await users.doc(user.uid).get().then((DocumentSnapshot doc) {
+          final data = doc.data();
+
+          userData.value = UserAccountModel.fromJson(jsonDecode(data.toString()));
+        });
         if(Get.isSnackbarOpen) Get.back();
         
         // Get.off(ProfileEditView(isNew: true,));
-        Get.off(MobileHomeView());
+        Get.off(MobileProfileEditView(isNew: true,));
     
       }else{
     
@@ -93,6 +102,13 @@ class MobileEntryViewController extends GetxController{
           'deviceToken': deviceToken.value
         });
         update();
+        await users.doc(user.uid).get().then((DocumentSnapshot doc) {
+          final data = doc.data();
+
+          userData.value = UserAccountModel.fromJson(jsonDecode(data.toString()));
+
+        });
+        
         if(Get.isSnackbarOpen) Get.back();
     
         Get.off(MobileHomeView());
