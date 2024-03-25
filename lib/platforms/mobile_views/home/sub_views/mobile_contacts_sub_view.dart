@@ -34,9 +34,9 @@ class MobileContactsSubView extends StatelessWidget {
               itemBuilder: (context, index){
                 return ListTile(
                   leading: CircleAvatar(
-                    child: Image.network(userAccountList[index].profilePicture!),
+                    child: Image.network(userAccountList[index].photoUrl!),
                   ),
-                  title: Text(userAccountList[index].username!),
+                  title: Text(userAccountList[index].name!),
                   subtitle: Text(userAccountList[index].email!),
                   trailing: IconButton(
                     icon: const Icon(Icons.more_vert),

@@ -1,69 +1,64 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserAccountModel {
-  String? username;
-  String? fullName;
+  String? name;
   String? dob;
   String? email;
   String? city;
   String? profileDesc;
   int? followers;
-  String? profilePicture;
-  List<String>? interests;
+  String? interests;
   String? lastLogin;
   String? currentCompany;
   String? currentOccupation;
   String? photoUrl;
   Map<String, dynamic>? userSettings;
+  Timestamp? lastLoginAt;
 
   UserAccountModel({
-    this.username,
-    this.fullName,
+    this.name,
     this.dob,
     this.email,
     this.city,
     this.profileDesc,
     this.followers,
-    this.profilePicture,
     this.interests,
-    this.lastLogin,
     this.currentCompany,
     this.currentOccupation,
     this.photoUrl,
     this.userSettings,
+    this.lastLoginAt,
   });
 
   UserAccountModel.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
-    fullName = json['full_name'];
-    dob = json['birthdate'];
-    email = json['email'];
-    city = json['location'];
-    profileDesc = json['profileDesc'];
-    followers = json['followers'];
-    profilePicture = json['profile_picture'];
-    interests = json['interests'];
-    lastLogin = json['last_login'];
-    currentCompany = json['currentCompany'];
-    currentOccupation = json['currentOccupation'];
-    photoUrl = json['photoUrl'];
+    name = json['name'] ?? 'N/A';
+    dob = json['birthdate']  ?? 'N/A';
+    email = json['email'] ?? 'N/A';
+    city = json['location'] ?? 'N/A';
+    profileDesc = json['profileDesc'] ?? 'N/A';
+    followers = json['followers'] ?? 0;
+    interests = json['interests'] ?? 'N/A';
+    currentCompany = json['currentCompany'] ?? 'N/A';
+    currentOccupation = json['currentOccupation'] ?? 'N/A';
+    photoUrl = json['photoUrl'] ?? 'N/A';
     userSettings = json['userSettings'];
+    lastLoginAt = json['lastLoginAt'] ?? Timestamp.now();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['username'] = username;
-    data['full_name'] = fullName;
-    data['birthdate'] = dob;
-    data['email'] = email;
-    data['location'] = city;
-    data['bio'] = profileDesc;
-    data['followers'] = followers;
-    data['profile_picture'] = profilePicture;
-    data['interests'] = interests;
-    data['last_login'] = lastLogin;
-    data['currentCompany'] = currentCompany;
-    data['currentOccupation'] = currentOccupation;
-    data['photoUrl'] = photoUrl;
+    data['username'] = name ?? 'N/A';
+    data['birthdate'] = dob ?? 'N/A';
+    data['email'] = email ?? 'N/A';
+    data['location'] = city ?? 'N/A';
+    data['bio'] = profileDesc ?? 'N/A';
+    data['followers'] = followers ?? 0;
+    data['interests'] = interests ?? ['N/A'];
+    data['currentCompany'] = currentCompany ?? 'N/A';
+    data['currentOccupation'] = currentOccupation ?? 'N/A';
+    data['photoUrl'] = photoUrl ?? 'N/A';
     data['userSettings'] = userSettings;
+    data['lastLoginAt'] = lastLoginAt ?? Timestamp.now();
     return data;
   }
 }

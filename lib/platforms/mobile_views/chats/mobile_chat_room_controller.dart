@@ -1,8 +1,6 @@
 import 'package:chatview/chatview.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:new_porto_space/models/message_model.dart';
-import 'package:new_porto_space/models/user_model.dart';
 
 class MobileChatRoomController extends GetxController {
 
@@ -19,6 +17,7 @@ class MobileChatRoomController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
     chatController = ChatController(
       initialMessageList: messages, 
       scrollController: scrollController, 

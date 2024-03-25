@@ -1,7 +1,4 @@
-import 'package:chatview/chatview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/constant.dart';
 import 'package:new_porto_space/platforms/mobile_views/chats/mobile_chat_room_controller.dart';
@@ -33,7 +30,7 @@ class MobileChatRoomView extends GetView<MobileChatRoomController> {
               )
             )
           ),
-          
+
         ]
       )
     );

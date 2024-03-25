@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/components/flexible_bar.dart';
-import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/nearby/mobile_nearby_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/search/mobile_search_view.dart';
 import 'package:new_porto_space/utils/dummydata.dart';
 
 import 'sub_views/mobile_sub_view_index.dart';
@@ -66,74 +66,76 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
               physics: const BouncingScrollPhysics(),
               controller: controller.scrollController,
               headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => [
-                SliverAppBar(
-                  backgroundColor: Colors.grey[900],
-                  pinned: true,
-                  floating: true,
-                  centerTitle: true,
-                  scrolledUnderElevation: 0,
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        showSnackBar(
-                          title: 'Search',
-                          message: 'This feature is not implemented yet',
-                          duration: const Duration(seconds: 5),
-                        );
-                      },
-                    )
-                  ],
-                  systemOverlayStyle: const SystemUiOverlayStyle(
-                    statusBarColor: Colors.transparent,
-                    statusBarBrightness: Brightness.dark,
-                    statusBarIconBrightness: Brightness.dark,
-                  ),
-                  leading: IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
-                      //open the drawer
-                      Scaffold.of(context).isDrawerOpen? 
-                      Scaffold.of(context).closeDrawer():
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
-                  title: controller.isSearchFieldActive.value?
-                  TextField(
-                    controller: controller.searchController,
-                    decoration:  InputDecoration(
-                      hintText: 'Search ID',
-                      border: InputBorder.none,
-                      suffixIcon: IconButton(
-                        onPressed: ()=>controller.isSearchFieldActive.value = false, 
-                        icon: const Icon(Icons.cancel)
-                      )
-                    ),
-                    onSubmitted: (value) {
-                      controller.onIdSearch(value);
-                    },
-                  ):
-                  const Text(
-                    'New Porto Space',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  expandedHeight: 180.0,
-                  flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.parallax,
+                Obx(
+                  ()=> SliverAppBar(
+                    backgroundColor: Colors.grey[900],
+                    pinned: true,
+                    floating: true,
                     centerTitle: true,
-                    expandedTitleScale: 1,
-                    background: FlexibleBar(
-                      username: controller.username.value,
-                      notifCount: 3,
-                    ),
-                    stretchModes: const [
-                      StretchMode.zoomBackground,
-                      // StretchMode.blurBackground,
-                      // StretchMode.fadeTitle,
+                    scrolledUnderElevation: 0,
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          controller.isSearchFieldActive.value =!controller.isSearchFieldActive.value;
+                        },
+                      )
                     ],
+                    systemOverlayStyle: const SystemUiOverlayStyle(
+                      statusBarColor: Colors.transparent,
+                      statusBarBrightness: Brightness.dark,
+                      statusBarIconBrightness: Brightness.dark,
+                    ),
+                    leading: IconButton(
+                      icon: const Icon(Icons.menu),
+                      onPressed: () {
+                        //open the drawer
+                        Scaffold.of(context).isDrawerOpen? 
+                        Scaffold.of(context).closeDrawer():
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+                    title: controller.isSearchFieldActive.value?
+                    TextField(
+                      controller: controller.searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search ID',
+                        border: InputBorder.none,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            controller.searchController.clear();
+                            controller.isSearchFieldActive.value = false;
+                          }, 
+                          icon: const Icon(Icons.cancel)
+                        )
+                      ),
+                      onSubmitted: (value) {
+                        controller.userSearch(value);
+                        Get.to(()=>MobileSearchView());
+                      },
+                    ):
+                    const Text(
+                      'New Porto Space',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    expandedHeight: 180.0,
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.parallax,
+                      centerTitle: true,
+                      expandedTitleScale: 1,
+                      background: FlexibleBar(
+                        username: controller.username.value,
+                        notifCount: 3,
+                      ),
+                      stretchModes: const [
+                        StretchMode.zoomBackground,
+                        // StretchMode.blurBackground,
+                        // StretchMode.fadeTitle,
+                      ],
+                    ),
                   ),
                 ),
               ],

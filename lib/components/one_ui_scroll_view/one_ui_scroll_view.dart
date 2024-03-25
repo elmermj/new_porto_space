@@ -18,8 +18,7 @@ class OneUiScrollView extends GetView<OneUiScrollController> {
     required this.backgroundColor,
     this.elevation = 12.0,
     this.globalKey,
-  })  : assert(expandedTitle != null),
-        assert(collapsedTitle != null);
+  });
 
   final Widget expandedTitle;
   final Widget collapsedTitle;
@@ -34,7 +33,6 @@ class OneUiScrollView extends GetView<OneUiScrollController> {
   final double elevation;
   final GlobalKey<NestedScrollViewState>? globalKey;
 
-  @override
   final OneUiScrollController scrollController = Get.put(OneUiScrollController());
 
   @override
@@ -121,9 +119,9 @@ class OneUiScrollView extends GetView<OneUiScrollController> {
         sliver: SliverAppBar(
           backgroundColor: backgroundColor,
           pinned: true,
-          expandedHeight: expandedHeight ??
-              (MediaQuery.of(context).size.height *
-                  kExpendedAppBarHeightRatio),
+          // expandedHeight: expandedHeight ??
+          //     (MediaQuery.of(context).size.height *
+          //         kExpendedAppBarHeightRatio),
           toolbarHeight: scrollController.toolbarHeight.value,
           elevation: elevation,
           flexibleSpace: LayoutBuilder(
@@ -188,7 +186,6 @@ class OneUiScrollView extends GetView<OneUiScrollController> {
   }
 
   Widget _actions() {
-    if (actions == null) return Container();
     return Align(
       alignment: Alignment.bottomRight,
       child: Container(
