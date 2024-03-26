@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/platforms/mobile_views/search/mobile_search_view_controller.dart';
 
 class MobileSearchView extends GetView<MobileSearchViewController> {
@@ -41,7 +43,6 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                 color: Colors.grey[900],
               ),
               Container(
-                margin: const EdgeInsets.only(top: kToolbarHeight),
                 child: controller.isMoreThan20Results.value?
                   ListView.builder(
                   itemCount: controller.userAccounts.length+1,
@@ -68,7 +69,52 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                         subtitle: Text(controller.userAccounts[index].email!),
                         trailing: IconButton(
                           icon: const Icon(Icons.more_horiz),
-                          onPressed: () {},
+                          onPressed: () {
+                            logYellow("pressed");
+                            showModalBottomSheet(
+                              context: context, 
+                              builder: (context) {
+                                return Container(
+                                  color: kDefaultIconDarkColor,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(24),
+                                      topRight: Radius.circular(24)
+                                    )
+                                  ),
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    children: [
+                                      ListTile(
+                                        leading: const Icon(LucideIcons.phone),
+                                        title: Text('Call ${controller.userAccounts[index].name}'),
+                                      ),
+                                      ListTile(
+                                        leading: const Icon(LucideIcons.messageCircle),
+                                        title: Text('Message ${controller.userAccounts[index].name}'),
+                                      ),
+                                      ListTile(
+                                        leading: const Icon(LucideIcons.video),
+                                        title: Text('Video Call ${controller.userAccounts[index].name}'),
+                                      ),
+                                      ListTile(
+                                        leading: const Icon(LucideIcons.userPlus),
+                                        title: Text('Add ${controller.userAccounts[index].name} as a friend'),
+                                      ),
+                                      ListTile(
+                                        leading: const Icon(LucideIcons.mailWarning),
+                                        title: Text('Report ${controller.userAccounts[index].name}'),
+                                      ),
+                                      ListTile(
+                                        leading: const Icon(LucideIcons.shieldClose),
+                                        title: Text('Block ${controller.userAccounts[index].name}'),
+                                      ),
+                                    ]
+                                  ),
+                                );
+                              }
+                            );
+                          },
                         ),
                         dense: true,
                       );
@@ -83,7 +129,52 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                       subtitle: Text(controller.userAccounts[index].email!),
                       trailing: IconButton(
                         icon: const Icon(Icons.more_horiz),
-                        onPressed: () {},
+                        onPressed: () {
+                          logYellow("pressed");
+                          showModalBottomSheet(
+                            context: context, 
+                            builder: (context) {
+                              return Container(
+                                decoration: const BoxDecoration(
+                                  color: kDefaultIconDarkColor,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(24),
+                                    topRight: Radius.circular(24)
+                                  )
+                                ),
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    ListTile(
+                                      leading: const Icon(LucideIcons.phone),
+                                      title: Text('Call ${controller.userAccounts[index].name}'),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(LucideIcons.messageCircle),
+                                      title: Text('Message ${controller.userAccounts[index].name}'),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(LucideIcons.video),
+                                      title: Text('Video Call ${controller.userAccounts[index].name}'),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(LucideIcons.userPlus),
+                                      title: Text('Add ${controller.userAccounts[index].name} as a friend'),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(LucideIcons.mailWarning),
+                                      title: Text('Report ${controller.userAccounts[index].name}'),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(LucideIcons.shieldClose),
+                                      title: Text('Block ${controller.userAccounts[index].name}'),
+                                    ),
+                                  ]
+                                ),
+                              );
+                            }
+                          );
+                        },
                       ),
                       dense: true,
                     );

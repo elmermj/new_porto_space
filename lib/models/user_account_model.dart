@@ -1,19 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
 
-class UserAccountModel {
+@HiveType(typeId: 0)
+class UserAccountModel extends HiveObject {
+  @HiveField(0)
   String? name;
+  @HiveField(1)
   String? dob;
+  @HiveField(2)
   String? email;
+  @HiveField(3)
   String? city;
+  @HiveField(4)
   String? profileDesc;
+  @HiveField(5)
   int? followers;
+  @HiveField(6)
   String? interests;
-  String? lastLogin;
+  @HiveField(7)
   String? currentCompany;
-  String? currentOccupation;
+  @HiveField(8)
+  String? occupation;
+  @HiveField(9)
   String? photoUrl;
+  @HiveField(10)
   Map<String, dynamic>? userSettings;
+  @HiveField(11)
   Timestamp? lastLoginAt;
+  @HiveField(12)
+  String? deviceToken;
+  @HiveField(13)
+  Timestamp? createdAt;
 
   UserAccountModel({
     this.name,
@@ -24,10 +41,12 @@ class UserAccountModel {
     this.followers,
     this.interests,
     this.currentCompany,
-    this.currentOccupation,
+    this.occupation,
     this.photoUrl,
     this.userSettings,
     this.lastLoginAt,
+    this.deviceToken,
+    this.createdAt,
   });
 
   UserAccountModel.fromJson(Map<String, dynamic> json) {
@@ -39,15 +58,17 @@ class UserAccountModel {
     followers = json['followers'] ?? 0;
     interests = json['interests'] ?? 'N/A';
     currentCompany = json['currentCompany'] ?? 'N/A';
-    currentOccupation = json['currentOccupation'] ?? 'N/A';
+    occupation = json['occupation'] ?? 'N/A';
     photoUrl = json['photoUrl'] ?? 'N/A';
     userSettings = json['userSettings'];
     lastLoginAt = json['lastLoginAt'] ?? Timestamp.now();
+    deviceToken = json['deviceToken'] ?? 'N/A';
+    createdAt = json['createdAt'] ?? Timestamp.fromDate(DateTime(1970));
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['username'] = name ?? 'N/A';
+    data['name'] = name ?? 'N/A';
     data['birthdate'] = dob ?? 'N/A';
     data['email'] = email ?? 'N/A';
     data['location'] = city ?? 'N/A';
@@ -55,10 +76,57 @@ class UserAccountModel {
     data['followers'] = followers ?? 0;
     data['interests'] = interests ?? ['N/A'];
     data['currentCompany'] = currentCompany ?? 'N/A';
-    data['currentOccupation'] = currentOccupation ?? 'N/A';
+    data['occupation'] = occupation ?? 'N/A';
     data['photoUrl'] = photoUrl ?? 'N/A';
     data['userSettings'] = userSettings;
     data['lastLoginAt'] = lastLoginAt ?? Timestamp.now();
+    data['deviceToken'] = deviceToken ?? 'N/A';
+    data['createdAt'] = createdAt?? Timestamp.fromDate(DateTime(1970));
     return data;
+  }
+}
+
+class UserAccountModelAdapter extends TypeAdapter<UserAccountModel> {
+
+  @override
+  final int typeId = 0;
+
+  @override
+  UserAccountModel read(BinaryReader reader) {
+    return UserAccountModel(
+      name: reader.read(),
+      dob: reader.read(),
+      email: reader.read(),
+      city: reader.read(),
+      profileDesc: reader.read(),
+      followers: reader.read(),
+      interests: reader.read(),
+      currentCompany: reader.read(),
+      occupation: reader.read(),
+      photoUrl: reader.read(),
+      userSettings: reader.read(),
+      lastLoginAt: reader.read(),
+      deviceToken: reader.read(),
+      createdAt: reader.read(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, UserAccountModel obj) {
+    writer
+      ..write(obj.name)
+      ..write(obj.dob)
+      ..write(obj.email)
+      ..write(obj.city)
+      ..write(obj.profileDesc)
+      ..write(obj.followers)
+      ..write(obj.interests)
+      ..write(obj.currentCompany)
+      ..write(obj.occupation)
+      ..write(obj.photoUrl)
+      ..write(obj.userSettings)
+      ..write(obj.lastLoginAt)
+      ..write(obj.deviceToken)
+      ..write(obj.createdAt);
   }
 }

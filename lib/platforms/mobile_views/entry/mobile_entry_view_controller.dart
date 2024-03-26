@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +23,13 @@ class MobileEntryViewController extends GetxController{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+
+  saveUserDataToLocal(String id, Rx<UserAccountModel> userData) async {
+    logYellow('saving to local...');
+    final userDataBox = await Hive.openBox<UserAccountModel>('userData');
+    await userDataBox.put("${id}_accountData", userData.value);
+    await userDataBox.close();
+  }
 
   onGoogleLogin() async {
     logYellow("onGoogleLogin");
@@ -85,10 +90,25 @@ class MobileEntryViewController extends GetxController{
           'deviceToken': deviceToken.value
         });
         update();
-        await users.doc(user.uid).get().then((DocumentSnapshot doc) {
-          final data = doc.data();
-
-          userData.value = UserAccountModel.fromJson(jsonDecode(data.toString()));
+        await users.doc(user.uid).get().then((DocumentSnapshot doc) async {
+          final data = doc.data() as Map<String,dynamic>;
+          final temp = UserAccountModel(
+            name: data['name'] as String?, // Explicit cast to String or nullable
+            email: data['email'] as String?,
+            lastLoginAt: data['lastLoginAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
+            dob: data['dob'] as String?,
+            profileDesc: data['profileDesc'] as String?,
+            photoUrl: data['photoUrl'] as String?,
+            interests: data['interests'] as String?,
+            city: data['city'] as String?,
+            currentCompany: data['currentCompany'] as String?,
+            occupation: data['occupation'] as String?,
+            userSettings: data['userSettings'] as Map<String, dynamic>?,
+            followers: data['followers'] as int?, // Explicit cast to int or nullable
+            createdAt: data['createdAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
+          );
+          userData.value = temp;
+          saveUserDataToLocal(user.uid, userData);
         });
         if(Get.isSnackbarOpen) Get.back();
         
@@ -102,13 +122,41 @@ class MobileEntryViewController extends GetxController{
           'deviceToken': deviceToken.value
         });
         update();
-        await users.doc(user.uid).get().then((DocumentSnapshot doc) {
-          final data = doc.data();
+        await users.doc(user.uid).get().then((DocumentSnapshot doc) async {
+          final data = doc.data() as Map<String,dynamic>;
 
-          userData.value = UserAccountModel.fromJson(jsonDecode(data.toString()));
-
+          final temp = UserAccountModel(
+            name: data['name'] as String?, // Explicit cast to String or nullable
+            email: data['email'] as String?,
+            lastLoginAt: data['lastLoginAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
+            dob: data['dob'] as String?,
+            profileDesc: data['profileDesc'] as String?,
+            photoUrl: data['photoUrl'] as String?,
+            interests: data['interests'] as String?,
+            city: data['city'] as String?,
+            currentCompany: data['currentCompany'] as String?,
+            occupation: data['occupation'] as String?,
+            userSettings: data['userSettings'] as Map<String, dynamic>?,
+            followers: data['followers'] as int?, // Explicit cast to int or nullable
+            createdAt: data['createdAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
+          );
+          userData.value = temp;
+          saveUserDataToLocal(user.uid, userData);
         });
-        
+        final userDataBox = await Hive.openBox<UserAccountModel>('userData');
+
+        // Retrieve the UserAccountModel object from the box
+        final userAccountModel = userDataBox.get("${user.uid}_accountData");
+
+        // Close the box
+        // await userDataBox.close();
+
+        // Extract name and email from the retrieved object
+        final name = userAccountModel?.name ?? 'N/A';
+        final email = userAccountModel?.email ?? 'N/A';
+
+        // Return name and email as a map
+        logGreen( {'name': name, 'email': email}.toString());
         if(Get.isSnackbarOpen) Get.back();
     
         Get.off(MobileHomeView());

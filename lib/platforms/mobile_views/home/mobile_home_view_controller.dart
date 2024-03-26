@@ -12,6 +12,7 @@ import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/mobile_entry_view.dart';
 
 import '../add_contact/mobile_add_contact_view.dart';
 
@@ -39,9 +40,9 @@ class MobileHomeViewController extends GetxController {
 
   //static declaration
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final FirebaseFirestore store = FirebaseFirestore.instance;
-  final FirebaseStorage storage = FirebaseStorage.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore store = FirebaseFirestore.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
 
 
   //functionality declaration
@@ -73,9 +74,10 @@ class MobileHomeViewController extends GetxController {
 
   getChatListDataFromFirestore() async {
     try {
-      final userDoc = await store.collection('users').doc(auth.currentUser!.uid).collection('ongoing-chats').get();
+      // final userDoc = await store.collection('users').doc(auth.currentUser!.uid).collection('ongoing-chats').get();
 
     } on Exception catch (e) {
+      logRed(e.toString());
     }
     
   }
@@ -128,9 +130,10 @@ class MobileHomeViewController extends GetxController {
             interests: data?['interests'] as String?,
             city: data?['city'] as String?,
             currentCompany: data?['currentCompany'] as String?,
-            currentOccupation: data?['currentOccupation'] as String?,
+            occupation: data?['occupation'] as String?,
             userSettings: data?['userSettings'] as Map<String, dynamic>?,
             followers: data?['followers'] as int?, // Explicit cast to int or nullable
+            createdAt: data?['createdAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
           );
 
           userAccountModelsFromSearch.add(temp);
@@ -181,9 +184,23 @@ class MobileHomeViewController extends GetxController {
     });
   }
 
-  void getUsersData() {
+  Future<void> logoutAndDeleteUserData() async {
+    // Step 1: Logout from Firebase
+    await FirebaseAuth.instance.signOut();
 
+    // Step 2: Delete user data from Hive
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userId = "${user.uid}_accountData";
+      final userDataBox = await Hive.openBox<UserAccountModel>('userData');
+      await userDataBox.delete(userId).catchError(
+        (e) => logRed(e.toString()),
+      );
+      await userDataBox.close();
+    }
+    Get.offAll(()=>MobileEntryView());
   }
+
 }
 
 class Maths {

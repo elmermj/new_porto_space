@@ -51,6 +51,13 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                     subtitle: Text('Allows you to update your bluetooth information'),
                   )
                 ),
+                TextButton(
+                  onPressed: ()=>controller.logoutAndDeleteUserData(),
+                  child: const ListTile(
+                    title: Text('Log Out'),
+                    subtitle: Text('Log out from your account'),
+                  )
+                ),
               ],
             ),
           ),

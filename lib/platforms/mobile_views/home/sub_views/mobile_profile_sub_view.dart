@@ -28,6 +28,33 @@ class MobileProfileSubView extends StatelessWidget {
               shrinkWrap: true,
               children: [
                 ListTile(
+                  leading: const Icon(LucideIcons.user),
+                  title: const Text('Edit Profile'),
+                  subtitle: const Text('Edit your profile information'),
+                  onTap: () {
+                    Get.to(()=> MobileVerifyProfileView());
+                  },
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                ),
+                ListTile(
+                  leading: const Icon(LucideIcons.lock),
+                  title: const Text('Security and Privacy'),
+                  subtitle: const Text('Adjust your password and profile privacy'),
+                  onTap: () {
+                    Get.to(()=> MobileVerifyProfileView());
+                  },
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                ),
+                ListTile(
+                  leading: const Icon(LucideIcons.settings),
+                  title: const Text('Settings'),
+                  subtitle: const Text('Customize application based on your own preference'),
+                  onTap: () {
+                    Get.to(()=> MobileVerifyProfileView());
+                  },
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                ),
+                ListTile(
                   leading: const Icon(Icons.verified_user),
                   title: const Text('Verify Profile'),
                   subtitle: const Text('Verify your profile with your ID and NFC'),
@@ -35,7 +62,7 @@ class MobileProfileSubView extends StatelessWidget {
                     Get.to(()=> MobileVerifyProfileView());
                   },
                   trailing: const Icon(LucideIcons.nfc),
-                )
+                ),
               ],
             ),
           )
