@@ -7,6 +7,8 @@ import 'package:hive/hive.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/use_cases/save_user_data_to_local.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/use_cases/send_logout_notification_to_old_device.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/profile/mobile_profile_edit_view.dart';
 
@@ -23,13 +25,6 @@ class MobileEntryViewController extends GetxController{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-
-  saveUserDataToLocal(String id, Rx<UserAccountModel> userData) async {
-    logYellow('saving to local...');
-    final userDataBox = await Hive.openBox<UserAccountModel>('userData');
-    await userDataBox.put("${id}_accountData", userData.value);
-    await userDataBox.close();
-  }
 
   onGoogleLogin() async {
     logYellow("onGoogleLogin");
@@ -81,7 +76,7 @@ class MobileEntryViewController extends GetxController{
       
       final CollectionReference users = FirebaseFirestore.instance.collection('users');
       if (isNewUser) {
-      
+
         await users.doc(user.uid).set({
           'name': user.displayName!,
           'email': user.email,
@@ -90,6 +85,7 @@ class MobileEntryViewController extends GetxController{
           'deviceToken': deviceToken.value
         });
         update();
+      
         await users.doc(user.uid).get().then((DocumentSnapshot doc) async {
           final data = doc.data() as Map<String,dynamic>;
           final temp = UserAccountModel(
@@ -105,10 +101,14 @@ class MobileEntryViewController extends GetxController{
             occupation: data['occupation'] as String?,
             userSettings: data['userSettings'] as Map<String, dynamic>?,
             followers: data['followers'] as int?, // Explicit cast to int or nullable
+            deviceToken: data['deviceToken'] as String?,
             createdAt: data['createdAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
           );
+
           userData.value = temp;
+
           saveUserDataToLocal(user.uid, userData);
+
         });
         if(Get.isSnackbarOpen) Get.back();
         
@@ -117,11 +117,7 @@ class MobileEntryViewController extends GetxController{
     
       }else{
     
-        await users.doc(user.uid).update({
-          'lastLoginAt': FieldValue.serverTimestamp(),
-          'deviceToken': deviceToken.value
-        });
-        update();
+        
         await users.doc(user.uid).get().then((DocumentSnapshot doc) async {
           final data = doc.data() as Map<String,dynamic>;
 
@@ -138,9 +134,17 @@ class MobileEntryViewController extends GetxController{
             occupation: data['occupation'] as String?,
             userSettings: data['userSettings'] as Map<String, dynamic>?,
             followers: data['followers'] as int?, // Explicit cast to int or nullable
+            deviceToken: data['deviceToken'] as String?,
             createdAt: data['createdAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
           );
           userData.value = temp;
+          if(userData.value.deviceToken != deviceToken.value){
+            sendLogoutNotificationToOldDevice(deviceToken.value, userData.value.deviceToken!);
+          }
+          await users.doc(user.uid).update({
+            'lastLoginAt': FieldValue.serverTimestamp(),
+            'deviceToken': deviceToken.value
+          });
           saveUserDataToLocal(user.uid, userData);
         });
         final userDataBox = await Hive.openBox<UserAccountModel>('userData');
@@ -149,7 +153,7 @@ class MobileEntryViewController extends GetxController{
         final userAccountModel = userDataBox.get("${user.uid}_accountData");
 
         // Close the box
-        // await userDataBox.close();
+        await userDataBox.close();
 
         // Extract name and email from the retrieved object
         final name = userAccountModel?.name ?? 'N/A';
@@ -159,7 +163,7 @@ class MobileEntryViewController extends GetxController{
         logGreen( {'name': name, 'email': email}.toString());
         if(Get.isSnackbarOpen) Get.back();
     
-        Get.off(MobileHomeView());
+        Get.offAll(()=>MobileHomeView());
     
       }
     } on Exception catch (e) {
@@ -358,7 +362,6 @@ class MobileEntryViewController extends GetxController{
 
   @override
   Future<void> onInit() async {
-    // TODO: implement onInit
     super.onInit();
     Hive.box<bool>('isNewApp').put('new', false);
   }

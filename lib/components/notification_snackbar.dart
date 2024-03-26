@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/components/loading_indicator.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/mobile_entry_view.dart';
 
 showNotifcationSnackBar({required String title, required String message, required Duration duration}) {
   Get.snackbar(
@@ -35,5 +37,24 @@ showNotifcationSnackBar({required String title, required String message, require
     backgroundColor: kDefaultIconDarkColor,
     overlayBlur: 0.5,
     snackStyle: SnackStyle.GROUNDED
+  );
+}
+
+showLogoutWarningDialog({required String title, required String message, required Duration duration}){
+  Get.dialog(
+    CupertinoAlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        CupertinoDialogAction(
+          isDestructiveAction: true,
+          onPressed: () {
+            Get.back();
+            Get.offAll(()=>MobileEntryView());
+          },
+          child: const Text('Confirm'),
+        ),
+      ],
+    )
   );
 }

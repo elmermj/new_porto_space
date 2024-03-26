@@ -111,6 +111,7 @@ Future<void> main() async {
   Hive.registerAdapter(ChatRoomModelAdapter());
   Hive.registerAdapter(TimestampAdapter());
   // await Hive.openBox<UserAccountModel>('userData');
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final messaging = FirebaseMessaging.instance;
   final settings = await messaging.requestPermission(
@@ -141,14 +142,20 @@ Future<void> main() async {
     if (message.notification!.title!.isEmpty) {
       return;
     }
+    logYellow("${message.notification!.title!} and ${message.notification!.body!}");
     AudioPlayer audioPlayer = AudioPlayer();
-    if (message.notification!.title! == 'Logout Notification'){
-      await audioPlayer.play(AssetSource('negative.wav'));
+    if (message.notification!.title! == 'Logout'){
+      await audioPlayer.play(AssetSource('sounds/negative.wav'));
       await MobileHomeViewController().logoutAndDeleteUserData();
+      showLogoutWarningDialog(
+        title: message.notification!.title!, 
+        message: message.notification!.body!, 
+        duration: const Duration(milliseconds: 1500)
+      );
     }else if (message.notification!.title! == 'Meeting approved!'){
-      await audioPlayer.play(AssetSource('positive.wav'));
+      await audioPlayer.play(AssetSource('sounds/positive.wav'));
     } else {
-      await audioPlayer.play(AssetSource('default_notification.wav'));
+      await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
     }
 
     
@@ -169,23 +176,28 @@ Future<void> main() async {
     }
     AudioPlayer audioPlayer = AudioPlayer();
 
-    await audioPlayer.play(AssetSource('default_notification.wav'));
-    if (message.notification!.title! == 'Logout Notification'){
-      await audioPlayer.play(AssetSource('negative.wav'));
+    await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
+    if (message.notification!.title! == 'Logout'){
+      await audioPlayer.play(AssetSource('sounds/negative.wav'));
       await MobileHomeViewController().logoutAndDeleteUserData();
+      showLogoutWarningDialog(
+        title: message.notification!.title!, 
+        message: message.notification!.body!, 
+        duration: const Duration(milliseconds: 1500)
+      );
     }
-    
-    logYellow("onMessage Data: ${message.notification!.title!}");
+
     showNotifcationSnackBar(
       title: message.notification!.title!, 
       message: message.notification!.body!, 
       duration: const Duration(milliseconds: 1500)
     );
+    
+    logYellow("onMessage Data: ${message.notification!.title!}");
     unreadNotificationCount.value++;
   });
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   var user = await FirebaseAuth.instance.currentUser?.getIdToken();
   logYellow('User ID token: $user');

@@ -74,7 +74,7 @@ flutter:
   assets:
     - assets/animation/location_icon.riv
     - assets/animation/card_swipe.riv
-    - assets/default_notification.wav
+    - assets/sounds/default_notification.wav
     - assets/sounds/magicmarimba.wav
     - assets/sounds/negative.wav
     - assets/sounds/positive.wav

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -9,21 +10,22 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   String? soundFilePath;
   String? title = message.notification!.title;
+  AudioPlayer audioPlayer = AudioPlayer();
   logCyan("NOTIF TITLE ::: $title");
 
   switch(title!.trim()){
     case 'New Meeting Request!':
-      soundFilePath = 'magicmarimba';
+      await audioPlayer.play(AssetSource('sounds/magicmarimba.wav'));
       break;
     case 'Meeting approved!':
-      soundFilePath = 'positive';
+      await audioPlayer.play(AssetSource('sounds/positive.wav'));
       break;
-    case 'Logout Notification':
-      soundFilePath = 'negative';
+    case 'Logout':
+      await audioPlayer.play(AssetSource('sounds/negative.wav'));
       await MobileHomeViewController().logoutAndDeleteUserData();
       break;
     default:
-      soundFilePath = 'default_notification';
+      await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
       break;
   }
 
@@ -31,9 +33,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
-        'nexttipushservice',
-        'nextti push service',
-        channelDescription: 'default nextti push service',
+        'portospacepushservice',
+        'portospace push service',
+        channelDescription: 'default portospace push service',
         importance: Importance.max,
         priority: Priority.max,
         visibility: NotificationVisibility.public,
@@ -56,14 +58,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     notification.body,
     NotificationDetails(android: androidPlatformChannelSpecifics, iOS: const DarwinNotificationDetails()),
   ).catchError((onError)=> logRed(onError.toString()));
-  // AudioPlayer audioPlayer = AudioPlayer();
-  // if (message.notification!.title! == 'Meeting canceled!'){
-  //   await audioPlayer.play(AssetSource('negative.wav'));
-  // }else if (message.notification!.title! == 'Meeting approved!'){
-  //   await audioPlayer.play(AssetSource('positive.wav'));
-  // } else {
-  //   await audioPlayer.play(AssetSource('default_notification.wav'));
-  // }
   unreadNotificationCount.value++;
   logCyan('Handling a background message ${message.data['body']}');
 }
