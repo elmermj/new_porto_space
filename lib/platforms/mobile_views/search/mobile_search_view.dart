@@ -42,7 +42,40 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
               ),
               Container(
                 margin: const EdgeInsets.only(top: kToolbarHeight),
-                child: ListView.builder(
+                child: controller.isMoreThan20Results.value?
+                  ListView.builder(
+                  itemCount: controller.userAccounts.length+1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if(index == controller.userAccounts.length + 1){
+                      return Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: TextButton(
+                          child: const Text(
+                            'Load More', 
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.lightBlueAccent
+                            ),
+                          ),
+                          onPressed: () => controller.loadMore(),
+                        )
+                      );
+                    }
+                    else {
+                      return ListTile(
+                        title: Text(controller.userAccounts[index].name!),
+                        subtitle: Text(controller.userAccounts[index].email!),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.more_horiz),
+                          onPressed: () {},
+                        ),
+                        dense: true,
+                      );
+                    }
+                  }
+                )
+                : ListView.builder(
                   itemCount: controller.userAccounts.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
