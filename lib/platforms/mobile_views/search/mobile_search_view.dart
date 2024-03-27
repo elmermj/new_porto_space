@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:new_porto_space/main.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/mobile_video_call_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/mobile_video_call_view_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/search/mobile_search_view_controller.dart';
 
 class MobileSearchView extends GetView<MobileSearchViewController> {
@@ -96,6 +98,7 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                                       ListTile(
                                         leading: const Icon(LucideIcons.video),
                                         title: Text('Video Call ${controller.userAccounts[index].name}'),
+                                        onTap: () => Get.to(()=>const MobileVideoCallView()),
                                       ),
                                       ListTile(
                                         leading: const Icon(LucideIcons.userPlus),
@@ -135,9 +138,9 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                             context: context, 
                             builder: (context) {
                               return Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: kDefaultIconDarkColor,
-                                  borderRadius: const BorderRadius.only(
+                                  borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(24),
                                     topRight: Radius.circular(24)
                                   )
@@ -156,6 +159,14 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                                     ListTile(
                                       leading: const Icon(LucideIcons.video),
                                       title: Text('Video Call ${controller.userAccounts[index].name}'),
+                                      onTap: () {
+                                        Get.put(MobileVideoCallViewController(
+                                          channelName: userData.value.deviceToken!+controller.userAccounts[index].deviceToken!,
+                                          remoteUID: controller.userAccounts[index].deviceToken!,
+                                          localUID: userData.value.deviceToken!
+                                        ));
+                                        Get.to(() => const MobileVideoCallView());
+                                      },
                                     ),
                                     ListTile(
                                       leading: const Icon(LucideIcons.userPlus),
