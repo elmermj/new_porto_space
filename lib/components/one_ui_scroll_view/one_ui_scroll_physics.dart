@@ -18,7 +18,7 @@ class OneUiScrollPhysics extends ScrollPhysics {
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
-    if ((velocity.abs() < tolerance.velocity) ||
+    if ((velocity.abs() < toleranceFor(position).velocity) ||
         (velocity > 0.0 && position.pixels >= position.maxScrollExtent) ||
         (velocity < 0.0 && position.pixels <= position.minScrollExtent)) {
       return null;

@@ -3,29 +3,44 @@ import 'dart:convert';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/secret_url.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_porto_space/utils/execute.dart';
 
-sendLogoutNotificationToOldDevice(String newDeviceToken, String oldDeviceToken) async {
-  String url = APIURL.getSenNotificationURL();
+class SendLogoutNotificationToOldDevice extends Execute{
+
+  final String newDeviceToken;
+  final String oldDeviceToken;
+
+  SendLogoutNotificationToOldDevice({
+    required this.newDeviceToken, 
+    required this.oldDeviceToken, 
+    super.instance = 'SendLogoutNotificationToOldDevice'
+  });
+
+  @override
+  execute() async {
+    await executeWithCatchError(super.instance);
+  }
+
+  @override
+  executeWithCatchError(String instance) async {
+    String url = APIURL.getSenNotificationURL();
     Map<String, String> requestBody = {
       'oldDeviceToken': userData.value.deviceToken!,
       'newDeviceToken': deviceToken.value,
     };
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(requestBody),
-      );
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
+    );
 
-      if (response.statusCode == 200) {
-        logGreen('Notification sent successfully');
-      } else {
-        logRed('Failed to send notification. Status code: ${response.statusCode}');
-      }
-    } catch (error) {
-      logRed('Error: $error');
+    if (response.statusCode == 200) {
+      logGreen('Notification sent successfully');
+    } else {
+      logRed('Failed to send notification. Status code: ${response.statusCode}');
     }
+  }
 }

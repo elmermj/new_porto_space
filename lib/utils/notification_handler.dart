@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -22,7 +22,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       break;
     case 'Logout':
       await audioPlayer.play(AssetSource('sounds/negative.wav'));
-      await MobileHomeViewController().logoutAndDeleteUserData();
+      OnLogoutAndDeleteUserData();
       break;
     default:
       await audioPlayer.play(AssetSource('sounds/default_notification.wav'));

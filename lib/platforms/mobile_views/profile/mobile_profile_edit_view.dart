@@ -10,6 +10,6 @@ class MobileProfileEditView extends GetView<MobileProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

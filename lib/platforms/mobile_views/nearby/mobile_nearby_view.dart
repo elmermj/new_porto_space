@@ -122,7 +122,7 @@ class MobileNearbyView extends GetView<MobileNearbyViewController> {
                                 // leading: CircleAvatar(
                                 //   child: Image.network(userAccountList[index].profilePicture!),
                                 // ),
-                                title: Text(controller.nearbyDevices[index].name),
+                                title: Text(controller.nearbyDevices[index].platformName),
                                 subtitle: Text(controller.nearbyDevices[index].platformName),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.more_vert),

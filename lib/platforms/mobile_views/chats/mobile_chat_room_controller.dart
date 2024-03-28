@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class MobileChatRoomController extends GetxController {
 
-  late final chatController;
+  late ChatController chatController;
   final ScrollController scrollController = ScrollController();
 
   final List<ChatUser> chatUsers = <ChatUser>[].obs;

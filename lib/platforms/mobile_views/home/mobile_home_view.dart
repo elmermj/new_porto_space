@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:new_porto_space/components/flexible_bar.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_search_user.dart';
 import 'package:new_porto_space/platforms/mobile_views/nearby/mobile_nearby_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/search/mobile_search_view.dart';
 import 'package:new_porto_space/utils/dummydata.dart';
@@ -52,7 +54,7 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                   )
                 ),
                 TextButton(
-                  onPressed: ()=>controller.logoutAndDeleteUserData(),
+                  onPressed: ()=>OnLogoutAndDeleteUserData(),
                   child: const ListTile(
                     title: Text('Log Out'),
                     subtitle: Text('Log out from your account'),
@@ -117,7 +119,16 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                         )
                       ),
                       onSubmitted: (value) {
-                        controller.userSearch(value);
+                        OnSearchUsers(
+                          query: value, 
+                          userIds: controller.userIds, 
+                          userAccountModelsFromSearch: 
+                          controller.userAccountModelsFromSearch, 
+                          resultCount: controller.resultCount, 
+                          storage: controller.storage, 
+                          store: controller.store
+                        );
+                        // controller.userSearch(value);
                         Get.to(()=>MobileSearchView());
                       },
                     ):

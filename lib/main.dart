@@ -14,7 +14,7 @@ import 'package:new_porto_space/components/notification_snackbar.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_porto_space_app.dart';
-import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
 import 'package:new_porto_space/utils/notification_handler.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart' as rx;
@@ -146,7 +146,7 @@ Future<void> main() async {
     AudioPlayer audioPlayer = AudioPlayer();
     if (message.notification!.title! == 'Logout'){
       await audioPlayer.play(AssetSource('sounds/negative.wav'));
-      await MobileHomeViewController().logoutAndDeleteUserData();
+      OnLogoutAndDeleteUserData;
       showLogoutWarningDialog(
         title: message.notification!.title!, 
         message: message.notification!.body!, 
@@ -179,7 +179,7 @@ Future<void> main() async {
     await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
     if (message.notification!.title! == 'Logout'){
       await audioPlayer.play(AssetSource('sounds/negative.wav'));
-      await MobileHomeViewController().logoutAndDeleteUserData();
+      OnLogoutAndDeleteUserData();
       showLogoutWarningDialog(
         title: message.notification!.title!, 
         message: message.notification!.body!, 

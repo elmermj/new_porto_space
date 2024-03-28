@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:new_porto_space/components/form_text_field.dart';
 import 'package:new_porto_space/constant.dart';
 import 'package:new_porto_space/platforms/mobile_views/entry/mobile_entry_view_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/use_cases/on_apple_login.dart';
+import 'package:new_porto_space/platforms/mobile_views/entry/use_cases/on_google_login.dart';
 
 class MobileEntryView extends GetView<MobileEntryViewController> {
   MobileEntryView({super.key});
@@ -39,13 +41,13 @@ class MobileEntryView extends GetView<MobileEntryViewController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton(
-                    onPressed: () async => await controller.onGoogleLogin(), 
+                    onPressed: () => OnGoogleLogin(googleSignIn: controller.googleSignIn, auth: controller.auth), 
                     child: const AutoSizeText(
                       'Login with Google'
                     )
                   ),
                   ElevatedButton(
-                    onPressed: () async => await controller.onAppleLogin(), 
+                    onPressed: () => OnAppleLogin(auth: controller.auth),
                     child: const AutoSizeText(
                       'Login with Apple'
                     )
@@ -100,13 +102,13 @@ class MobileEntryView extends GetView<MobileEntryViewController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton(
-                    onPressed: () async => await controller.onGoogleLogin(), 
+                    onPressed: () => OnGoogleLogin(googleSignIn: controller.googleSignIn, auth: controller.auth), 
                     child: const AutoSizeText(
                       'Sign up with Google'
                     )
                   ),
                   ElevatedButton(
-                    onPressed: () async => await controller.onAppleLogin(), 
+                    onPressed: () => OnAppleLogin(auth: controller.auth),
                     child: const AutoSizeText(
                       'Sign up with Apple'
                     )

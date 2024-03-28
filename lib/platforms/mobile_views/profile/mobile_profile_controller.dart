@@ -10,7 +10,7 @@ class MobileProfileController extends GetxController {
   RxString result = ''.obs;
 
   NFCTag? _tag;
-  RxString? _result = ''.obs, _mifareResult = ''.obs;
+  RxString? aResult = ''.obs, _mifareResult = ''.obs;
   late StreamController<bool> _nfcStreamController;
   late Stream<bool> _nfcStream;
 
@@ -20,7 +20,7 @@ class MobileProfileController extends GetxController {
     super.onInit();
     _resultStream.listen(
       (data) {
-        _result!.value = data;
+        aResult!.value = data;
         logPink('Result: $data');
       },
     );
@@ -28,7 +28,7 @@ class MobileProfileController extends GetxController {
   }
 
   Stream<String> get resultStream => result.stream;
-  Stream<String> get _resultStream => _result!.stream;
+  Stream<String> get _resultStream => aResult!.stream;
 
   void _initializeNfcStream() {
     _nfcStreamController = StreamController<bool>();
@@ -51,24 +51,24 @@ class MobileProfileController extends GetxController {
       if (tag.standard == "ISO 14443-4 (Type B)") {
         String result1 = await FlutterNfcKit.transceive("00B0950000");
         String result2 = await FlutterNfcKit.transceive("00A4040009A00000000386980701");
-        _result!.value = '1: $result1\n2: $result2\n';
+        aResult!.value = '1: $result1\n2: $result2\n';
       } else if (tag.type == NFCTagType.iso18092) {
         String result1 = await FlutterNfcKit.transceive("060080080100");
-        _result!.value = '1: $result1\n';
+        aResult!.value = '1: $result1\n';
       } else if (tag.ndefAvailable ?? false) {
         var ndefRecords = await FlutterNfcKit.readNDEFRecords();
         var ndefString = '';
         for (int i = 0; i < ndefRecords.length; i++) {
           ndefString += '${i + 1}: ${ndefRecords[i]}\n';
         }
-        _result!.value = ndefString; 
+        aResult!.value = ndefString; 
       } else if (tag.type == NFCTagType.webusb) {
         var r = await FlutterNfcKit.transceive("00A4040006D27600012401");
         logCyan(r);
       }
-      logCyan('ID: ${_tag!.id}\nStandard: ${_tag!.standard}\nType: ${_tag!.type}\nATQA: ${_tag!.atqa}\nSAK: ${_tag!.sak}\nHistorical Bytes: ${_tag!.historicalBytes}\nProtocol Info: ${_tag!.protocolInfo}\nApplication Data: ${_tag!.applicationData}\nHigher Layer Response: ${_tag!.hiLayerResponse}\nManufacturer: ${_tag!.manufacturer}\nSystem Code: ${_tag!.systemCode}\nDSF ID: ${_tag!.dsfId}\nNDEF Available: ${_tag!.ndefAvailable}\nNDEF Type: ${_tag!.ndefType}\nNDEF Writable: ${_tag!.ndefWritable}\nNDEF Can Make Read Only: ${_tag!.ndefCanMakeReadOnly}\nNDEF Capacity: ${_tag!.ndefCapacity}\nMifare Info:${_tag!.mifareInfo} Transceive Result:\n$_result\n\nBlock Message:\n$_mifareResult');
+      logCyan('ID: ${_tag!.id}\nStandard: ${_tag!.standard}\nType: ${_tag!.type}\nATQA: ${_tag!.atqa}\nSAK: ${_tag!.sak}\nHistorical Bytes: ${_tag!.historicalBytes}\nProtocol Info: ${_tag!.protocolInfo}\nApplication Data: ${_tag!.applicationData}\nHigher Layer Response: ${_tag!.hiLayerResponse}\nManufacturer: ${_tag!.manufacturer}\nSystem Code: ${_tag!.systemCode}\nDSF ID: ${_tag!.dsfId}\nNDEF Available: ${_tag!.ndefAvailable}\nNDEF Type: ${_tag!.ndefType}\nNDEF Writable: ${_tag!.ndefWritable}\nNDEF Can Make Read Only: ${_tag!.ndefCanMakeReadOnly}\nNDEF Capacity: ${_tag!.ndefCapacity}\nMifare Info:${_tag!.mifareInfo} Transceive Result:\n$aResult\n\nBlock Message:\n$_mifareResult');
     } catch (e) {
-      _result!.value = 'error: $e';
+      aResult!.value = 'error: $e';
     }
 
     await FlutterNfcKit.finish(iosAlertMessage: "Finished!");

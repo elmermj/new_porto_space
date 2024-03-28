@@ -37,7 +37,6 @@ void main() {
       // Act
       controller.initializeScrollListener();
       
-      double offset = controller.scrollController.offset;
 
       // Assert
       expect(controller.margin.value, 55);
@@ -50,6 +49,7 @@ void main() {
 
 class MockFirestore extends Mock implements FirebaseFirestore {}
 
+// ignore: must_be_immutable, subtype_of_sealed_class
 class MockCollectionReference extends Mock implements CollectionReference {}
 
 class MockFlutterBluePlus extends Mock implements FlutterBluePlus {} 
