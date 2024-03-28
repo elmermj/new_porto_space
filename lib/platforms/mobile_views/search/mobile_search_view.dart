@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/mobile_video_call_view.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/mobile_video_call_view_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/mobile_calling_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/mobile_call_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/search/mobile_search_view_controller.dart';
 
 class MobileSearchView extends GetView<MobileSearchViewController> {
@@ -98,7 +98,17 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                                       ListTile(
                                         leading: const Icon(LucideIcons.video),
                                         title: Text('Video Call ${controller.userAccounts[index].name}'),
-                                        onTap: () => Get.to(()=>const MobileVideoCallView()),
+                                        onTap: () {
+                                          logYellow("channelName ::: ${userData.value.deviceToken!+controller.userAccounts[index].deviceToken!}");
+                                          logYellow("remoteUserData (FCM TOKEN) ::: ${controller.userAccounts[index].deviceToken!}");
+                                          logYellow("localDeviceToken ::: ${userData.value.deviceToken!}");
+                                          Get.put(MobileCallController(
+                                            channelName: userData.value.deviceToken!+controller.userAccounts[index].deviceToken!,
+                                            remoteUserData: controller.userAccounts[index],
+                                            localUID: userData.value.deviceToken!
+                                          ));
+                                          Get.to(() => MobileCallingView());
+                                        },
                                       ),
                                       ListTile(
                                         leading: const Icon(LucideIcons.userPlus),
@@ -160,12 +170,15 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                                       leading: const Icon(LucideIcons.video),
                                       title: Text('Video Call ${controller.userAccounts[index].name}'),
                                       onTap: () {
-                                        Get.put(MobileVideoCallViewController(
+                                        logYellow("channelName ::: ${userData.value.deviceToken!+controller.userAccounts[index].deviceToken!}");
+                                        logYellow("remoteUserData (FCM TOKEN) ::: ${controller.userAccounts[index].deviceToken!}");
+                                        logYellow("localDeviceToken ::: ${userData.value.deviceToken!}");
+                                        Get.put(MobileCallController(
                                           channelName: userData.value.deviceToken!+controller.userAccounts[index].deviceToken!,
-                                          remoteUID: controller.userAccounts[index].deviceToken!,
+                                          remoteUserData: controller.userAccounts[index],
                                           localUID: userData.value.deviceToken!
                                         ));
-                                        Get.to(() => const MobileVideoCallView());
+                                        Get.to(() => MobileCallingView());
                                       },
                                     ),
                                     ListTile(

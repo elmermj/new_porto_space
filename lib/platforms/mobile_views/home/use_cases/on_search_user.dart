@@ -16,6 +16,7 @@ class OnSearchUsers extends Execute {
   final RxInt resultCount;
   final FirebaseStorage storage;
   final FirebaseFirestore store;
+  bool loading = false;
   
   OnSearchUsers({
     required this.query, 
@@ -74,9 +75,9 @@ class OnSearchUsers extends Execute {
         final data = doc.data() as Map<String, dynamic>?;
         logPink(data.toString());
         final temp = UserAccountModel(
-          name: data?['name'] as String?, // Explicit cast to String or nullable
+          name: data?['name'] as String?, 
           email: data?['email'] as String?,
-          lastLoginAt: data?['lastLoginAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
+          lastLoginAt: data?['lastLoginAt'] as Timestamp?, 
           dob: data?['dob'] as String?,
           profileDesc: data?['profileDesc'] as String?,
           photoUrl: data?['photoUrl'] as String?,
@@ -85,10 +86,11 @@ class OnSearchUsers extends Execute {
           currentCompany: data?['currentCompany'] as String?,
           occupation: data?['occupation'] as String?,
           userSettings: data?['userSettings'] as Map<String, dynamic>?,
-          followers: data?['followers'] as int?, // Explicit cast to int or nullable
-          createdAt: data?['createdAt'] as Timestamp?, // Assuming Timestamp is imported from 'package:cloud_firestore/cloud_firestore.dart'
+          followers: data?['followers'] as int?, 
+          createdAt: data?['createdAt'] as Timestamp?,
+          deviceToken: data?['deviceToken'] as String?,
         );
-
+        logPink("${temp.name}'s deviceToken ::: ${temp.deviceToken}");
         userAccountModelsFromSearch.add(temp);
         count++;
       });

@@ -21,7 +21,8 @@ class MobileSearchViewController extends GetxController{
     isMoreThan20Results.value = homeController.resultCount > 20;
     idResults.value = homeController.userIds;
 
-    logYellow(userAccounts.length.toString());
+    // logYellow("SEARCH RESULT COUNT ::: ${userAccounts.length}");
+    // logYellow("USER DEVICE TOKEN ::: ${userAccounts[0].deviceToken}");
 
     // Now you can use userAccounts as needed
     // For example, you can iterate over it:

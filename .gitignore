@@ -45,3 +45,4 @@ app.*.map.json
 lib/service_account.dart
 lib/secret_url.dart
 porto-space-app-service-account.json
+lib/secret_url.dart

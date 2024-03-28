@@ -125,13 +125,15 @@ class OnGoogleLogin extends Execute {
           createdAt: data['createdAt'] as Timestamp?,
         );
         userData.value = temp;
-        if(userData.value.deviceToken != deviceToken.value){
+        if(userData.value.deviceToken != deviceToken.value && userData.value.deviceToken!= null) {
           SendLogoutNotificationToOldDevice(newDeviceToken: deviceToken.value, oldDeviceToken: userData.value.deviceToken!);
         }
         await users.doc(user.uid).update({
           'lastLoginAt': FieldValue.serverTimestamp(),
           'deviceToken': deviceToken.value
         });
+        userData.value.deviceToken = deviceToken.value;
+        userData.value.lastLoginAt = Timestamp.now();
         SaveUserDataToLocal(id: user.uid, userData: userData).execute();
       });
       final userDataBox = await Hive.openBox<UserAccountModel>('userData');

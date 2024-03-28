@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/components/flexible_bar.dart';
+import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
@@ -118,18 +119,22 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                           icon: const Icon(Icons.cancel)
                         )
                       ),
-                      onSubmitted: (value) {
-                        OnSearchUsers(
-                          query: value, 
-                          userIds: controller.userIds, 
-                          userAccountModelsFromSearch: 
-                          controller.userAccountModelsFromSearch, 
-                          resultCount: controller.resultCount, 
-                          storage: controller.storage, 
-                          store: controller.store
-                        );
-                        // controller.userSearch(value);
-                        Get.to(()=>MobileSearchView());
+                      onSubmitted: (query) async {
+                        if(query.trim() != ''){
+                          OnSearchUsers(
+                            query: query, 
+                            userIds: controller.userIds, 
+                            userAccountModelsFromSearch: 
+                            controller.userAccountModelsFromSearch, 
+                            resultCount: controller.resultCount, 
+                            storage: controller.storage, 
+                            store: controller.store
+                          );
+                          // controller.userSearch(value);
+                          Get.to(()=>MobileSearchView());
+                        }else{
+                          showSnackBar(title: "Invalid Search Term", message: "Please enter a keyword", duration: const Duration(seconds: 2));
+                        }
                       },
                     ):
                     const Text(

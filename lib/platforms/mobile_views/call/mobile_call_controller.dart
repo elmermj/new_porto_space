@@ -2,10 +2,11 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/main.dart';
+import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/secret_url.dart';
 
-class MobileVideoCallViewController extends GetxController {
-    late final RtcEngine _engine;
+class MobileCallController extends GetxController {
+  late final RtcEngine engine;
 
   bool isJoined = false,
       switchCamera = true,
@@ -19,21 +20,23 @@ class MobileVideoCallViewController extends GetxController {
   bool isUseAndroidSurfaceView = false;
   ChannelProfileType channelProfileType = ChannelProfileType.channelProfileCommunication1v1;
   late final RtcEngineEventHandler rtcEngineEventHandler;
-  late RtcEngine engine;
-  final String channelName;
-  final String remoteUID;
-  final String localUID;
+  final String? channelName;
+  final UserAccountModel? remoteUserData;
+  final String? localUID;
   RxString roomToken = ''.obs;
   RxBool localUserJoin = false.obs;
 
-  MobileVideoCallViewController({required this.channelName, required this.remoteUID, required this.localUID});
+  MobileCallController({this.channelName, this.remoteUserData, this.localUID}){
+    onInit();
+  }
 
   @override
   void onInit() {
     super.onInit();
+    logYellow("iniiiiit");
     controller = TextEditingController(text: channelName);
 
-    _initEngine();
+    initEngine();
   }
 
   @override
@@ -43,14 +46,15 @@ class MobileVideoCallViewController extends GetxController {
   }
 
   Future<void> _dispose() async {
-    _engine.unregisterEventHandler(rtcEngineEventHandler);
-    await _engine.leaveChannel();
-    await _engine.release();
+    engine.unregisterEventHandler(rtcEngineEventHandler);
+    await engine.leaveChannel();
+    await engine.release();
   }
 
-  Future<void> _initEngine() async {
-    _engine = createAgoraRtcEngine();
-    await _engine.initialize(RtcEngineContext(
+  Future<void> initEngine() async {
+    engine = createAgoraRtcEngine();
+    logYellow(engine.toString());
+    await engine.initialize(RtcEngineContext(
       appId: APIURL.getAgoraAppID(),
     ));
     rtcEngineEventHandler = RtcEngineEventHandler(
@@ -89,14 +93,14 @@ class MobileVideoCallViewController extends GetxController {
       },
     );
 
-    _engine.registerEventHandler(rtcEngineEventHandler);
+    engine.registerEventHandler(rtcEngineEventHandler);
 
-    await _engine.enableVideo();
-    await _engine.startPreview();
+    await engine.enableVideo();
+    await engine.startPreview();
   }
 
   Future<void> joinChannel(String channelId, String token, int uid) async {
-    await _engine.joinChannel(
+    await engine.joinChannel(
       token: token,
       channelId: channelId,
       uid: uid,
@@ -108,7 +112,7 @@ class MobileVideoCallViewController extends GetxController {
   }
 
   Future<void> leaveChannel() async {
-    await _engine.leaveChannel();
+    await engine.leaveChannel();
     openCamera = true;
     muteCamera = false;
     muteAllRemoteVideo = false;
@@ -116,25 +120,25 @@ class MobileVideoCallViewController extends GetxController {
   }
 
   Future<void> onSwitchCamera() async {
-    await _engine.switchCamera();
+    await engine.switchCamera();
     switchCamera = !switchCamera;
     update();
   }
 
   Future<void> openOrCloseCamera() async {
-    await _engine.enableLocalVideo(!openCamera);
+    await engine.enableLocalVideo(!openCamera);
     openCamera = !openCamera;
     update();
   }
   
   Future<void> muteLocalVideoStream() async {
-    await _engine.muteLocalVideoStream(!muteCamera);
+    await engine.muteLocalVideoStream(!muteCamera);
     muteCamera = !muteCamera;
     update();
   }
 
   Future<void> muteAllRemoteVideoStreams() async {
-    await _engine.muteAllRemoteVideoStreams(!muteAllRemoteVideo);
+    await engine.muteAllRemoteVideoStreams(!muteAllRemoteVideo);
     muteAllRemoteVideo = !muteAllRemoteVideo;
     update();
   }

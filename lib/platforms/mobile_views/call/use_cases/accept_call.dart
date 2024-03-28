@@ -2,19 +2,20 @@ import 'dart:convert';
 
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/secret_url.dart';
-import 'package:http/http.dart' as http;
 import 'package:new_porto_space/utils/execute.dart';
+import 'package:http/http.dart' as http;
 
-class SendLogoutNotificationToOldDevice extends Execute{
+class AcceptCall extends Execute {
+  final String remoteDeviceToken;
+  final String channelName;
 
-  final String newDeviceToken;
-  final String oldDeviceToken;
-
-  SendLogoutNotificationToOldDevice({
-    required this.newDeviceToken, 
-    required this.oldDeviceToken, 
-    super.instance = 'SendLogoutNotificationToOldDevice'
-  });
+  AcceptCall({
+    required this.remoteDeviceToken,
+    required this.channelName,
+    super.instance = 'AcceptCall'
+  }){
+    execute();
+  }
 
   @override
   execute() async {
@@ -23,10 +24,11 @@ class SendLogoutNotificationToOldDevice extends Execute{
 
   @override
   executeWithCatchError(String instance) async {
-    String url = APIURL.getSentNotificationURL();
+    logYellow("acceptCall");
+    String url = APIURL.getSendAcceptCallNotificationURL();
     Map<String, String> requestBody = {
-      'oldDeviceToken': userData.value.deviceToken!,
-      'newDeviceToken': deviceToken.value,
+      'receiverDeviceToken': remoteDeviceToken,
+      'channelName': channelName,
     };
 
     final response = await http.post(

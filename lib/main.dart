@@ -110,7 +110,8 @@ Future<void> main() async {
   Hive.registerAdapter(UserAccountModelAdapter());
   Hive.registerAdapter(ChatRoomModelAdapter());
   Hive.registerAdapter(TimestampAdapter());
-  // await Hive.openBox<UserAccountModel>('userData');
+  await Hive.openBox<UserAccountModel>('userData');
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final messaging = FirebaseMessaging.instance;
@@ -201,8 +202,16 @@ Future<void> main() async {
 
   var user = await FirebaseAuth.instance.currentUser?.getIdToken();
   logYellow('User ID token: $user');
-
-  isLogin.value = user?.isNotEmpty ?? false;
+  if(user!= null){
+    final userID = FirebaseAuth.instance.currentUser!.uid;
+    userData.value = Hive.box<UserAccountModel>('userData').get("${userID}_accountData")!;
+    logGreen("SUCCESS RETRIEVING DATA FROM LOCAL STORAGE");
+    logGreen("msg: ${userData.value.name}");
+    logGreen("DEVICE TOKEN : ${userData.value.deviceToken}");
+    isLogin.value = true;
+  }else{
+    isLogin.value = false;
+  }
 
   deviceToken.value = await getNotificationToken();
 
@@ -216,7 +225,7 @@ Future<void> main() async {
     exit(1);
   } else {
     if(Platform.isAndroid || Platform.isIOS){     
-      await requestPermissions();
+      // await requestPermissions();
       runApp(
         MobilePortoSpaceApp(
           isNewAppValue: isNewAppValue,

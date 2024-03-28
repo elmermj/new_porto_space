@@ -1,9 +1,9 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/mobile_video_call_view_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/mobile_call_controller.dart';
 
-class MobileVideoCallView extends GetView<MobileVideoCallViewController> {
+class MobileVideoCallView extends GetView<MobileCallController> {
   const MobileVideoCallView({super.key});
 
   @override
