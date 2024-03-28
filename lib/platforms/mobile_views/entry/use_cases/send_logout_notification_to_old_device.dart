@@ -23,7 +23,7 @@ class SendLogoutNotificationToOldDevice extends Execute{
 
   @override
   executeWithCatchError(String instance) async {
-    String url = APIURL.getSentNotificationURL();
+    String url = APIURL.getSendNotificationURL();
     Map<String, String> requestBody = {
       'oldDeviceToken': userData.value.deviceToken!,
       'newDeviceToken': deviceToken.value,
