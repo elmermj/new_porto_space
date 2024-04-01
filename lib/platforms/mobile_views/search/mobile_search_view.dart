@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/mobile_calling_view.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/mobile_call_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/calling/mobile_calling_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/use_cases/send_call_notification.dart';
 import 'package:new_porto_space/platforms/mobile_views/search/mobile_search_view_controller.dart';
 
 class MobileSearchView extends GetView<MobileSearchViewController> {
@@ -102,12 +102,20 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                                           logYellow("channelName ::: ${userData.value.deviceToken!+controller.userAccounts[index].deviceToken!}");
                                           logYellow("remoteUserData (FCM TOKEN) ::: ${controller.userAccounts[index].deviceToken!}");
                                           logYellow("localDeviceToken ::: ${userData.value.deviceToken!}");
-                                          Get.put(MobileCallController(
+                                          SendCallNotification(
                                             channelName: userData.value.deviceToken!+controller.userAccounts[index].deviceToken!,
-                                            remoteUserData: controller.userAccounts[index],
-                                            localUID: userData.value.deviceToken!
-                                          ));
-                                          Get.to(() => MobileCallingView());
+                                            remoteDeviceToken: controller.userAccounts[index].deviceToken!,
+                                            senderName: userData.value.name!,
+                                            localDeviceToken: userData.value.deviceToken!
+                                          );
+                                          Get.to(
+                                            () => MobileCallingView(),
+                                            arguments: [
+                                              userData.value.deviceToken!+controller.userAccounts[index].deviceToken!,
+                                              controller.userAccounts[index].name,
+                                              userData.value.deviceToken!
+                                            ]
+                                          );
                                         },
                                       ),
                                       ListTile(
@@ -148,9 +156,9 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                             context: context, 
                             builder: (context) {
                               return Container(
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   color: kDefaultIconDarkColor,
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(24),
                                     topRight: Radius.circular(24)
                                   )
@@ -173,12 +181,20 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                                         logYellow("channelName ::: ${userData.value.deviceToken!+controller.userAccounts[index].deviceToken!}");
                                         logYellow("remoteUserData (FCM TOKEN) ::: ${controller.userAccounts[index].deviceToken!}");
                                         logYellow("localDeviceToken ::: ${userData.value.deviceToken!}");
-                                        Get.put(MobileCallController(
+                                        SendCallNotification(
                                           channelName: userData.value.deviceToken!+controller.userAccounts[index].deviceToken!,
-                                          remoteUserData: controller.userAccounts[index],
-                                          localUID: userData.value.deviceToken!
-                                        ));
-                                        Get.to(() => MobileCallingView());
+                                          remoteDeviceToken: controller.userAccounts[index].deviceToken!,
+                                          senderName: userData.value.name!,
+                                          localDeviceToken: userData.value.deviceToken!
+                                        );
+                                        Get.to(
+                                          () => MobileCallingView(),
+                                          arguments: [
+                                            userData.value.deviceToken!+controller.userAccounts[index].deviceToken!,
+                                            controller.userAccounts[index].name,
+                                            userData.value.deviceToken!
+                                          ]
+                                        );
                                       },
                                     ),
                                     ListTile(

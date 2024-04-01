@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:new_porto_space/platforms/mobile_views/calling/mobile_calling_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/welcome/mobile_welcome_view.dart';
 
@@ -27,6 +29,10 @@ class MobilePortoSpaceApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         home: MobileWelcomeView(),
+        routes: {
+          '/calling': (context) => MobileCallingView(),
+          '/incoming_call': (context) => MobileIncomingCallView(),
+        }
       );
     } else {
       // Redirect to appropriate View based on login status

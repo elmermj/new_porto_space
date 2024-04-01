@@ -2,7 +2,6 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/secret_url.dart';
 
 class MobileCallController extends GetxController {
@@ -20,13 +19,13 @@ class MobileCallController extends GetxController {
   bool isUseAndroidSurfaceView = false;
   ChannelProfileType channelProfileType = ChannelProfileType.channelProfileCommunication1v1;
   late final RtcEngineEventHandler rtcEngineEventHandler;
-  final String? channelName;
-  final UserAccountModel? remoteUserData;
-  final String? localUID;
+  String? channelName;
+  String? requesterName;
+  String? fallbackToken;
   RxString roomToken = ''.obs;
   RxBool localUserJoin = false.obs;
 
-  MobileCallController({this.channelName, this.remoteUserData, this.localUID}){
+  MobileCallController({this.channelName, this.requesterName, this.fallbackToken}){
     onInit();
   }
 
@@ -35,6 +34,10 @@ class MobileCallController extends GetxController {
     super.onInit();
     logYellow("iniiiiit");
     controller = TextEditingController(text: channelName);
+    dynamic args = Get.arguments;
+    channelName = args[0];
+    requesterName = args[1];
+    fallbackToken = args[2];
 
     initEngine();
   }

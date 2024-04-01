@@ -63,6 +63,15 @@ class MobileProfileSubView extends StatelessWidget {
                   },
                   trailing: const Icon(LucideIcons.nfc),
                 ),
+                ListTile(
+                  leading: const Icon(LucideIcons.users),
+                  title: const Text('Switch Account'),
+                  subtitle: const Text('This will automatically logs you out from this account once you choose which account to switch on'),
+                  onTap: () {
+                    Get.to(()=> MobileVerifyProfileView());
+                  },
+                  trailing: const Icon(LucideIcons.nfc),
+                ),
               ],
             ),
           )

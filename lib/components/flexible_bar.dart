@@ -19,7 +19,7 @@ class FlexibleBar extends StatelessWidget {
             children: [
               SizedBox(
                 width: Get.width,
-                child: const Text(
+                child: Text(
                   'Welcome',
                   textAlign: TextAlign.left,
                   style: TextStyle(color: kDefaultIconLightColor, fontSize: 18),
@@ -30,7 +30,7 @@ class FlexibleBar extends StatelessWidget {
                 child: Text(
                   username,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: kDefaultIconLightColor,
                       fontSize: 24.0,
                       fontWeight: FontWeight.w600),
@@ -41,7 +41,7 @@ class FlexibleBar extends StatelessWidget {
           const SizedBox(height: 8,),
           Text(
             notifCount>1?'You have $notifCount new notifications':'You have a new notification',
-            style: const TextStyle(
+            style: TextStyle(
               color: kDefaultIconLightColor,
               fontSize: 16.0,
               fontWeight: FontWeight.w400

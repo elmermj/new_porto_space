@@ -80,3 +80,4 @@ flutter:
     - assets/sounds/magicmarimba.wav
     - assets/sounds/negative.wav
     - assets/sounds/positive.wav
+    - assets/sounds/incoming_call_bell.wav

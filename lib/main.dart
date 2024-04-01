@@ -11,9 +11,13 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
 import 'package:new_porto_space/components/notification_snackbar.dart';
+import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_porto_space_app.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/use_cases/cancel_call.dart';
+import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_view.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
 import 'package:new_porto_space/utils/notification_handler.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -145,18 +149,69 @@ Future<void> main() async {
     }
     logYellow("${message.notification!.title!} and ${message.notification!.body!}");
     AudioPlayer audioPlayer = AudioPlayer();
-    if (message.notification!.title! == 'Logout'){
-      await audioPlayer.play(AssetSource('sounds/negative.wav'));
-      OnLogoutAndDeleteUserData;
-      showLogoutWarningDialog(
-        title: message.notification!.title!, 
-        message: message.notification!.body!, 
-        duration: const Duration(milliseconds: 1500)
-      );
-    }else if (message.notification!.title! == 'Meeting approved!'){
-      await audioPlayer.play(AssetSource('sounds/positive.wav'));
-    } else {
-      await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
+    switch (message.notification!.title!) {
+      case 'Logout':
+        await audioPlayer.play(AssetSource('sounds/negative.wav'));
+        OnLogoutAndDeleteUserData;
+        showLogoutWarningDialog(
+            title: message.notification!.title!,
+            message: message.notification!.body!,
+            duration: const Duration(milliseconds: 1500));
+        break;
+      case "Cancelled Call":
+        await audioPlayer.play(AssetSource('sounds/negative.wav'));
+        logYellow("INITIATED CANCELLED CALL PROCESS");
+        logYellow("CURRENT ROUTE == ${Get.currentRoute}");
+        if(Get.currentRoute == '/MobileIncomingCallView'){
+          showSnackBar(
+            title: message.notification!.title!, 
+            message: message.notification!.body!,
+            duration: const Duration(seconds: 2)
+          );
+          return Get.back();
+        }
+        if(Get.currentRoute == '/MobileCallingView'){
+          logPink("caller detected [you]");
+          return Get.back();
+        }
+        return;
+      case 'Call':
+        final body = message.notification!.body!;
+        final fallbackToken = message.data['fallbackToken'];
+        final channelName = message.data['channelName'];
+        final requesterName = message.data['requesterName'];
+        logYellow("$body || $fallbackToken || $channelName");
+        Get.to(
+          () => MobileIncomingCallView(message: body,),
+          arguments: [
+            channelName,
+            requesterName,
+            fallbackToken
+          ]
+        );
+        int repeatCount = 0;
+        while (repeatCount < 15) {
+          audioPlayer.play(AssetSource('sounds/incoming_call_bell.wav'));
+          // Check if the user has gone back or terminated MobileCallingView
+          if (Get.currentRoute != '/MobileIncomingCallView') {
+            break;
+          }
+          await Future.delayed(const Duration(seconds: 4));
+          repeatCount++;
+          logCyan("repeats ::: $repeatCount");
+        }
+        CancelCall(
+          remoteDeviceToken: fallbackToken, 
+          channelName: channelName
+        );
+        Get.offAll(()=> MobileHomeView())!.whenComplete(() {
+          repeatCount = 15;
+          return audioPlayer.stop();
+        });
+        
+      default:
+        await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
+        break;
     }
 
     
