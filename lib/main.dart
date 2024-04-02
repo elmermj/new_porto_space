@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:new_porto_space/adapters/chat_room_model_adapter.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
 import 'package:new_porto_space/components/notification_snackbar.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
-import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_porto_space_app.dart';
 import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_view.dart';
@@ -180,7 +180,7 @@ Future<void> main() async {
         final requesterName = message.data['requesterName'];
         logYellow("$body || $fallbackToken || $channelName");
         Get.to(
-          () => MobileIncomingCallView(message: body,),
+          () => MobileIncomingCallView(message: body, isFromTerminated: false,),
           arguments: [
             channelName,
             requesterName,
@@ -194,7 +194,6 @@ Future<void> main() async {
         await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
         break;
     }
-
     
     logYellow("onMessage Data: ${message.notification!.title!}");
     showNotifcationSnackBar(
@@ -266,6 +265,7 @@ Future<void> main() async {
         MobilePortoSpaceApp(
           isNewAppValue: isNewAppValue,
           isLoggedIn: isLogin.value,
+          isIncomingCall: false
         )
       );
     }

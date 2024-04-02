@@ -1,39 +1,43 @@
 package com.example.new_porto_space
 
-import MobileIncomingCallActivity
+import IncomingCallActivity
 import android.content.Intent
-import android.os.Bundle
+import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONObject
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.example.new_porto_space/incoming_call_channel"
+    private val CHANNEL = "incoming_call_channel"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "launchIncomingCallActivity") {
-                launchIncomingCallActivity(call.arguments as String)
-                result.success(true)
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "startIncomingCallActivity") {
+                val body = call.argument<String>("body")
+                val channelName = call.argument<String>("channelName")
+                val requesterName = call.argument<String>("requesterName")
+                val fallbackToken = call.argument<String>("fallbackToken")
+                startIncomingCallActivity(body, channelName, requesterName, fallbackToken)
+                result.success(null)
             } else {
                 result.notImplemented()
             }
         }
     }
 
-    private fun launchIncomingCallActivity(payload: String) {
-        val json = JSONObject(payload)
-        val channelName = json.getString("channelName")
-        val requesterName = json.getString("requesterName")
-        val fallbackToken = json.getString("fallbackToken")
-
-        val intent = Intent(this, MobileIncomingCallActivity::class.java).apply {
-            putExtra("channelName", channelName)
-            putExtra("requesterName", requesterName)
-            putExtra("fallbackToken", fallbackToken)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+    private fun startIncomingCallActivity(
+        body: String?,
+        channelName: String?,
+        requesterName: String?,
+        fallbackToken: String?
+    ) {
+        val intent = Intent(applicationContext, IncomingCallActivity::class.java)
+        intent.putExtra("body", body)
+        intent.putExtra("channelName", channelName)
+        intent.putExtra("requesterName", requesterName)
+        intent.putExtra("fallbackToken", fallbackToken)
         startActivity(intent)
     }
 }

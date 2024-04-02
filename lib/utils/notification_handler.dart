@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +23,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       final fallbackToken = message.data['fallbackToken'];
       final channelName = message.data['channelName'];
       final requesterName = message.data['requesterName'];
-      logYellow("$body || $fallbackToken || $channelName");
+      logYellow("$body || $fallbackToken || $channelName || $requesterName");
+      startIncomingCallActivity(body, channelName, requesterName, fallbackToken);
       // Get.to(
       //   () => MobileIncomingCallView(key: Get.key, message: body,),
       //   arguments: [
@@ -35,7 +34,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       //     true
       //   ]
       // );
-      showIncomingCallUI(channelName: channelName, requesterName: requesterName, fallbackToken: fallbackToken);
+      // showIncomingCallUI(channelName: channelName, requesterName: requesterName, fallbackToken: fallbackToken);
+      // await incomingCallMain(message);
       break;
     case 'Logout':
       await audioPlayer.play(AssetSource('sounds/negative.wav'));
@@ -68,27 +68,42 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         sound: RawResourceAndroidNotificationSound(soundFilePath)
       );
       
-  RemoteNotification? notification = message.notification;
+  RemoteNotification notification = message.notification!;
   await flutterLocalNotificationsPlugin.show(
-    notification.hashCode,    
-    notification!.title,
+    notification.hashCode,
+    notification.title,
     notification.body,
     NotificationDetails(android: androidPlatformChannelSpecifics, iOS: const DarwinNotificationDetails()),
   ).catchError((onError)=> logRed(onError.toString()));
   unreadNotificationCount.value++;
-  logCyan('Handling a background message ${message.data['body']}');
+  logCyan('Handling a background message ${message.notification!.body}');
 }
 
-// Call the native method to display incoming call UI
-void showIncomingCallUI({required String channelName, required String requesterName, required String fallbackToken}) {
-  const MethodChannel methodChannel = MethodChannel('com.example.new_porto_space/incoming_call_channel');
+const MethodChannel _channel = MethodChannel('incoming_call_channel');
+
+Future<void> startIncomingCallActivity(String body, String channelName, String requesterName, String fallbackToken) async {
   try {
-    methodChannel.invokeMethod('launchIncomingCallActivity', jsonEncode({
+    await _channel.invokeMethod('startIncomingCallActivity', {
+      'body': body,
       'channelName': channelName,
       'requesterName': requesterName,
       'fallbackToken': fallbackToken,
-    }));
-  } on PlatformException catch (e) {
-    logRed("Failed to show incoming call UI: '${e.message}'.");
+    });
+  } on Exception catch (e) {
+    logRed(e.toString());
   }
 }
+
+// Call the native method to display incoming call UI
+// void showIncomingCallUI({required String channelName, required String requesterName, required String fallbackToken}) {
+//   const MethodChannel methodChannel = MethodChannel('com.example.new_porto_space/incoming_call_channel');
+//   try {
+//     methodChannel.invokeMethod('launchIncomingCallActivity', jsonEncode({
+//       'channelName': channelName,
+//       'requesterName': requesterName,
+//       'fallbackToken': fallbackToken,
+//     }));
+//   } on PlatformException catch (e) {
+//     logRed("Failed to show incoming call UI: '${e.message}'.");
+//   }
+// }

@@ -156,9 +156,9 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                             context: context, 
                             builder: (context) {
                               return Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: kDefaultIconDarkColor,
-                                  borderRadius: const BorderRadius.only(
+                                  borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(24),
                                     topRight: Radius.circular(24)
                                   )
