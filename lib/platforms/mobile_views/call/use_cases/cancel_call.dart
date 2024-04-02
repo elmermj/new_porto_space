@@ -20,6 +20,7 @@ class CancelCall extends Execute {
 
   @override
   execute() {
+    AudioPlayer().play(AssetSource('sounds/negative.wav'));
     executeWithCatchError(super.instance);
   }
 
@@ -45,6 +46,5 @@ class CancelCall extends Execute {
     } else {
       logRed('Failed to send notification. Status code: ${response.statusCode}');
     }
-    AudioPlayer().play(AssetSource('sounds/negative.wav'));
   }
 }

@@ -4,14 +4,15 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:new_porto_space/platforms/mobile_views/call/mobile_video_call_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/call/use_cases/accept_call.dart';
 import 'package:new_porto_space/platforms/mobile_views/call/use_cases/cancel_call.dart';
-import 'package:new_porto_space/platforms/mobile_views/calling/mobile_calling_view_controller.dart';
 
-class MobileIncomingCallView extends GetView<MobileCallingViewController> {
+import 'mobile_incoming_call_controller.dart';
+
+class MobileIncomingCallView extends GetView<MobileIncomingCallController> {
   MobileIncomingCallView({super.key, this.message,});
   final String? message;
 
   @override
-  final MobileCallingViewController controller = Get.put(MobileCallingViewController());
+  final MobileIncomingCallController controller = Get.put(MobileIncomingCallController());
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class MobileIncomingCallView extends GetView<MobileCallingViewController> {
         children: [
           FloatingActionButton(
             onPressed: () {
+              controller.repeatCount.value = 60;
               CancelCall(
                 remoteDeviceToken: controller.fallbackToken!,
                 channelName: controller.channelName!,

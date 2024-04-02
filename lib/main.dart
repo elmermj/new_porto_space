@@ -15,9 +15,7 @@ import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/platforms/mobile_porto_space_app.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/use_cases/cancel_call.dart';
 import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_view.dart';
-import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
 import 'package:new_porto_space/utils/notification_handler.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -186,29 +184,12 @@ Future<void> main() async {
           arguments: [
             channelName,
             requesterName,
-            fallbackToken
+            fallbackToken,
+            false
           ]
         );
-        int repeatCount = 0;
-        while (repeatCount < 15) {
-          audioPlayer.play(AssetSource('sounds/incoming_call_bell.wav'));
-          // Check if the user has gone back or terminated MobileCallingView
-          if (Get.currentRoute != '/MobileIncomingCallView') {
-            break;
-          }
-          await Future.delayed(const Duration(seconds: 4));
-          repeatCount++;
-          logCyan("repeats ::: $repeatCount");
-        }
-        CancelCall(
-          remoteDeviceToken: fallbackToken, 
-          channelName: channelName
-        );
-        Get.offAll(()=> MobileHomeView())!.whenComplete(() {
-          repeatCount = 15;
-          return audioPlayer.stop();
-        });
-        
+        break;
+
       default:
         await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
         break;
@@ -252,8 +233,8 @@ Future<void> main() async {
     logYellow("onMessage Data: ${message.notification!.title!}");
     unreadNotificationCount.value++;
   });
+  
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
 
   var user = await FirebaseAuth.instance.currentUser?.getIdToken();
   logYellow('User ID token: $user');

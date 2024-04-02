@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
@@ -17,8 +20,22 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     case 'New Meeting Request!':
       await audioPlayer.play(AssetSource('sounds/magicmarimba.wav'));
       break;
-    case 'Meeting approved!':
-      await audioPlayer.play(AssetSource('sounds/positive.wav'));
+    case 'Call':
+      final body = message.notification!.body!;
+      final fallbackToken = message.data['fallbackToken'];
+      final channelName = message.data['channelName'];
+      final requesterName = message.data['requesterName'];
+      logYellow("$body || $fallbackToken || $channelName");
+      // Get.to(
+      //   () => MobileIncomingCallView(key: Get.key, message: body,),
+      //   arguments: [
+      //     channelName,
+      //     requesterName,
+      //     fallbackToken,
+      //     true
+      //   ]
+      // );
+      showIncomingCallUI(channelName: channelName, requesterName: requesterName, fallbackToken: fallbackToken);
       break;
     case 'Logout':
       await audioPlayer.play(AssetSource('sounds/negative.wav'));
@@ -60,4 +77,18 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   ).catchError((onError)=> logRed(onError.toString()));
   unreadNotificationCount.value++;
   logCyan('Handling a background message ${message.data['body']}');
+}
+
+// Call the native method to display incoming call UI
+void showIncomingCallUI({required String channelName, required String requesterName, required String fallbackToken}) {
+  const MethodChannel methodChannel = MethodChannel('com.example.new_porto_space/incoming_call_channel');
+  try {
+    methodChannel.invokeMethod('launchIncomingCallActivity', jsonEncode({
+      'channelName': channelName,
+      'requesterName': requesterName,
+      'fallbackToken': fallbackToken,
+    }));
+  } on PlatformException catch (e) {
+    logRed("Failed to show incoming call UI: '${e.message}'.");
+  }
 }

@@ -29,6 +29,7 @@ class MobilePortoSpaceApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         home: MobileWelcomeView(),
+        initialRoute: '/',
         routes: {
           '/calling': (context) => MobileCallingView(),
           '/incoming_call': (context) => MobileIncomingCallView(),
@@ -45,6 +46,11 @@ class MobilePortoSpaceApp extends StatelessWidget {
         home: isLoggedIn
             ? MobileHomeView()
             : MobileEntryView(),
+        initialRoute: '/',
+        routes: {
+          '/calling': (context) => MobileCallingView(),
+          '/incoming_call': (context) => MobileIncomingCallView(),
+        }
       );
     }
   }
