@@ -23,7 +23,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl:
   auto_size_text:
-  syncfusion_flutter_calendar: ^22.2.8
   http:
   connectivity:
   flutter_typeahead: ^4.3.3

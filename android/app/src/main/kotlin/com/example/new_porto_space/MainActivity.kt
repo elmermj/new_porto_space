@@ -13,7 +13,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "incoming_call_channel").setMethodCallHandler { call, result ->
             if (call.method == "startIncomingCallActivity") {
                 val body = call.argument<String>("body")
                 val channelName = call.argument<String>("channelName")

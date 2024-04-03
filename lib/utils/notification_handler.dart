@@ -79,7 +79,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   logCyan('Handling a background message ${message.notification!.body}');
 }
 
-const MethodChannel _channel = MethodChannel('incoming_call_channel');
+
+const MethodChannel _channel = MethodChannel("incoming_call_channel");
 
 Future<void> startIncomingCallActivity(String body, String channelName, String requesterName, String fallbackToken) async {
   try {
