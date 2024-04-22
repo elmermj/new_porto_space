@@ -128,7 +128,8 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                             controller.userAccountModelsFromSearch, 
                             resultCount: controller.resultCount, 
                             storage: controller.storage, 
-                            store: controller.store
+                            store: controller.store,
+                            types: controller.types
                           );
                           // controller.userSearch(value);
                           Get.to(()=>MobileSearchView());
@@ -223,6 +224,58 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
               ]
             ),
           ),
+        ),
+
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context, 
+              builder: (context) {
+                return SizedBox(
+                  height: Get.height,
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.grey,
+                              width: 0.5,
+                            )
+                          )
+                        ),
+                        height: kToolbarHeight,
+                        child: const Center(
+                          child: Text("Add something"),
+                        ),
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.grey,
+                              width: 0.5,
+                            )
+                          )
+                        ),
+                        height: kTextTabBarHeight,
+                        child: const TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "What's on your mind?",
+                          ),
+                          minLines: 6,
+                          maxLines: 18,
+
+                        )
+                      ),
+                    ],
+                  ),
+                );
+              }
+            );
+          },
         ),
       ),
     );

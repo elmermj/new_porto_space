@@ -9,6 +9,7 @@ class MobileSearchViewController extends GetxController{
   int maxIndex = 0;
 
   RxList<UserAccountModel> userAccounts = <UserAccountModel>[].obs;
+  RxList<int> types = <int>[].obs;
   RxBool isMoreThan20Results = false.obs;
   RxList<String> idResults = <String>[].obs;
 
@@ -20,7 +21,7 @@ class MobileSearchViewController extends GetxController{
     userAccounts = homeController.userAccountModelsFromSearch;
     isMoreThan20Results.value = homeController.resultCount > 20;
     idResults.value = homeController.userIds;
-
+    types.value = homeController.types;
     // logYellow("SEARCH RESULT COUNT ::: ${userAccounts.length}");
     // logYellow("USER DEVICE TOKEN ::: ${userAccounts[0].deviceToken}");
 

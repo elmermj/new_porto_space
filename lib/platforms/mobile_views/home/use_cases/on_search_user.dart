@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/components/showsnackbar.dart';
@@ -16,6 +17,7 @@ class OnSearchUsers extends Execute {
   final RxInt resultCount;
   final FirebaseStorage storage;
   final FirebaseFirestore store;
+  final RxList<int> types;
   bool loading = false;
   
   OnSearchUsers({
@@ -25,6 +27,7 @@ class OnSearchUsers extends Execute {
     required this.resultCount, 
     required this.storage,
     required this.store,
+    required this.types,
     super.instance = 'OnSearchUsers'
   });
 
@@ -33,6 +36,7 @@ class OnSearchUsers extends Execute {
     logYellow("onSearchUsers");
     userIds.clear();
     userAccountModelsFromSearch.clear();
+    types.clear();
     showSnackBar(title: "Search...", message: "Please wait...", duration: const Duration(minutes: 2));
     // Get a reference to the folder
     final Reference folderRef = storage.ref().child('search_users_index');
@@ -46,13 +50,60 @@ class OnSearchUsers extends Execute {
         .map((item) => item.name)
         .toList();
     logGreen("files ::: $matchingFilenames");
+
+    
+
+    List<String> requestReceivedList = [];
+
+    List<String> requestSentList = [];
+
+    List<String> exceptionList = [];
+
+    List<String> whoYouBlockedList = [];
+
+    await store.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection('blocked').get().then(
+      (value) {
+        for (var element in value.docs) {
+          //if field 'sender' is false then add to list
+          if (element.data()['sender']) {
+            whoYouBlockedList.add(element.id);
+          }else{
+            exceptionList.add(element.id);
+          }
+        }
+      }
+    );
+
+    await store.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection('friend_requests').get().then(
+      (value) {
+        for (var element in value.docs) {
+          if (element.data()['sender']) {
+            requestSentList.add(element.id);
+          }else{
+            requestReceivedList.add(element.id);
+          }
+        }
+      }
+    );
+    
     // Download and parse each matching file
     for (String filename in matchingFilenames) {
       Reference fileRef = folderRef.child(filename);
       Uint8List? fileContent = await fileRef.getData(1024 * 1024); // Download file and read its content
       final jsonMap = jsonDecode(utf8.decode(fileContent!));
       String userId = jsonMap['id'];
-      userIds.add(userId);
+      if(!exceptionList.contains(userId)){
+        userIds.add(userId);
+        if(requestReceivedList.contains(userId)){
+          types.add(1); // request received -- display accept/reject options
+        }else if(requestSentList.contains(userId)){
+          types.add(2); // request sent -- display cancel option
+        }else if(whoYouBlockedList.contains(userId)){
+          types.add(3); // blocked -- display unblock option
+        }else{
+          types.add(0); // normal -- display default option
+        }
+      }
     }
 
     resultCount.value = userIds.length;
