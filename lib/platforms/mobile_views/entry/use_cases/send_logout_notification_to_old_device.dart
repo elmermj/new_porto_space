@@ -18,15 +18,11 @@ class SendLogoutNotificationToOldDevice extends Execute{
 
   @override
   execute() async {
-    await executeWithCatchError(super.instance);
-  }
-
-  @override
-  executeWithCatchError(String instance) async {
     String url = APIURL.getSendNotificationURL();
     Map<String, String> requestBody = {
       'oldDeviceToken': userData.value.deviceToken!,
-      'newDeviceToken': deviceToken.value,
+      'newDeviceToken': currentFCMToken.value,
+      'channelId': APIURL.getAppChannelID()
     };
 
     final response = await http.post(

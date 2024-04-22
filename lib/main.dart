@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,22 +10,19 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:new_porto_space/adapters/chat_room_model_adapter.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
-import 'package:new_porto_space/components/notification_snackbar.dart';
-import 'package:new_porto_space/components/showsnackbar.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
+import 'package:new_porto_space/notification/on_message.dart';
+import 'package:new_porto_space/notification/on_message_opened.dart';
 import 'package:new_porto_space/platforms/mobile_porto_space_app.dart';
-import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_view.dart';
-import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
-import 'package:new_porto_space/utils/notification_handler.dart';
+import 'package:new_porto_space/notification/firebase_messaging_background_handler.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
 import 'firebase_options.dart';
 
-RxString deviceToken = ''.obs;
+RxString currentFCMToken = ''.obs;
 RxBool isLogin = false.obs;
 Rx<Box<dynamic>> isNewApp = Hive.box<dynamic>('isNewApp').obs;
-RxString currentFCMToken = ''.obs;
 RxInt unreadNotificationCount = 0.obs;
 final messageStreamController = rx.BehaviorSubject<RemoteMessage>();
 
@@ -48,56 +44,6 @@ void logCyan(String msg) {
 
 void logPink(String msg){
   debugPrint('\x1B[35m$msg\x1B[0m');
-}
-
-getNotificationToken() async {
-  String? token;
-  await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: true,
-    badge: true,
-    carPlay: true,
-    criticalAlert: true,
-    provisional: true,
-    sound: true,
-  );
-  if(Platform.isAndroid){
-    token = await FirebaseMessaging.instance.getToken();
-  }
-  if(Platform.isIOS){
-    token = await FirebaseMessaging.instance.getAPNSToken();
-  }
-  return token;
-}
-
-Future<void> requestPermissions() async {
-  // Request permissions for camera, storage, microphone, etc.
-  Map<Permission, PermissionStatus> statuses = await [
-    Permission.camera,
-    Permission.storage,
-    Permission.microphone,
-    Permission.contacts,
-    Permission.location,
-    Permission.phone,
-    Permission.sms,
-    Permission.notification,
-    Permission.sensors,
-    Permission.mediaLibrary,
-    Permission.photos,
-    Permission.storage,
-    Permission.bluetooth,
-    Permission.bluetoothScan,
-    Permission.bluetoothConnect,
-    Permission.bluetoothAdvertise,
-  ].request();
-  
-  if (statuses[Permission.camera] != PermissionStatus.granted ||
-      statuses[Permission.storage] != PermissionStatus.granted ||
-      statuses[Permission.microphone] != PermissionStatus.granted) {
-    // Handle denied permissions
-    logRed('Permissions not granted');
-    return;
-  }
 }
 
 Rx<UserAccountModel> userData = UserAccountModel().obs;
@@ -140,98 +86,9 @@ Future<void> main() async {
 
   await FirebaseMessaging.instance.getInitialMessage();
   
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    logYellow('onMessage: $message');
-    if (message.notification!.title!.isEmpty) {
-      return;
-    }
-    logYellow("${message.notification!.title!} and ${message.notification!.body!}");
-    AudioPlayer audioPlayer = AudioPlayer();
-    switch (message.notification!.title!) {
-      case 'Logout':
-        await audioPlayer.play(AssetSource('sounds/negative.wav'));
-        OnLogoutAndDeleteUserData;
-        showLogoutWarningDialog(
-            title: message.notification!.title!,
-            message: message.notification!.body!,
-            duration: const Duration(milliseconds: 1500));
-        break;
-      case "Cancelled Call":
-        await audioPlayer.play(AssetSource('sounds/negative.wav'));
-        logYellow("INITIATED CANCELLED CALL PROCESS");
-        logYellow("CURRENT ROUTE == ${Get.currentRoute}");
-        if(Get.currentRoute == '/MobileIncomingCallView'){
-          showSnackBar(
-            title: message.notification!.title!, 
-            message: message.notification!.body!,
-            duration: const Duration(seconds: 2)
-          );
-          return Get.back();
-        }
-        if(Get.currentRoute == '/MobileCallingView'){
-          logPink("caller detected [you]");
-          return Get.back();
-        }
-        return;
-      case 'Call':
-        final body = message.notification!.body!;
-        final fallbackToken = message.data['fallbackToken'];
-        final channelName = message.data['channelName'];
-        final requesterName = message.data['requesterName'];
-        logYellow("$body || $fallbackToken || $channelName");
-        Get.to(
-          () => MobileIncomingCallView(message: body, isFromTerminated: false,),
-          arguments: [
-            channelName,
-            requesterName,
-            fallbackToken,
-            false
-          ]
-        );
-        break;
-
-      default:
-        await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
-        break;
-    }
-    
-    logYellow("onMessage Data: ${message.notification!.title!}");
-    showNotifcationSnackBar(
-      title: message.notification!.title!, 
-      message: message.notification!.body!, 
-      duration: const Duration(milliseconds: 1500)
-    );
-    messageStreamController.sink.add(message);
-    unreadNotificationCount.value++;
-  });
+  onMessage();
   
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-    logYellow('onMessageOpenedApp: $message');
-    if (message.notification!.title!.isEmpty) {
-      return;
-    }
-    AudioPlayer audioPlayer = AudioPlayer();
-
-    await audioPlayer.play(AssetSource('sounds/default_notification.wav'));
-    if (message.notification!.title! == 'Logout'){
-      await audioPlayer.play(AssetSource('sounds/negative.wav'));
-      OnLogoutAndDeleteUserData();
-      showLogoutWarningDialog(
-        title: message.notification!.title!, 
-        message: message.notification!.body!, 
-        duration: const Duration(milliseconds: 1500)
-      );
-    }
-
-    showNotifcationSnackBar(
-      title: message.notification!.title!, 
-      message: message.notification!.body!, 
-      duration: const Duration(milliseconds: 1500)
-    );
-    
-    logYellow("onMessage Data: ${message.notification!.title!}");
-    unreadNotificationCount.value++;
-  });
+  onMessageOpened();
   
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
@@ -247,8 +104,6 @@ Future<void> main() async {
   }else{
     isLogin.value = false;
   }
-
-  deviceToken.value = await getNotificationToken();
 
   // Check if the app is new or not
   var isNewAppBox = await Hive.openBox<bool>('isNewApp');
@@ -270,4 +125,55 @@ Future<void> main() async {
       );
     }
   } 
+}
+
+getNotificationToken() async {
+  String? token;
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: true,
+    badge: true,
+    carPlay: true,
+    criticalAlert: true,
+    provisional: true,
+    sound: true,
+  );
+  if(Platform.isAndroid){
+    token = await FirebaseMessaging.instance.getToken();
+  }
+  if(Platform.isIOS){
+    token = await FirebaseMessaging.instance.getAPNSToken();
+  }
+
+  return token;
+}
+
+Future<void> requestPermissions() async {
+  // Request permissions for camera, storage, microphone, etc.
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.camera,
+    Permission.storage,
+    Permission.microphone,
+    Permission.contacts,
+    Permission.location,
+    Permission.phone,
+    Permission.sms,
+    Permission.notification,
+    Permission.sensors,
+    Permission.mediaLibrary,
+    Permission.photos,
+    Permission.storage,
+    Permission.bluetooth,
+    Permission.bluetoothScan,
+    Permission.bluetoothConnect,
+    Permission.bluetoothAdvertise,
+  ].request();
+  
+  if (statuses[Permission.camera] != PermissionStatus.granted ||
+      statuses[Permission.storage] != PermissionStatus.granted ||
+      statuses[Permission.microphone] != PermissionStatus.granted) {
+    // Handle denied permissions
+    logRed('Permissions not granted');
+    return;
+  }
 }

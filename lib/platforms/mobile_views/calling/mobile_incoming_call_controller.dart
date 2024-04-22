@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/main.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/use_cases/cancel_call.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 
 class MobileIncomingCallController extends GetxController {
@@ -15,19 +14,20 @@ class MobileIncomingCallController extends GetxController {
   RxInt repeatCount = 0.obs; 
   AudioPlayer audioPlayer = AudioPlayer();
 
-  MobileIncomingCallController({this.channelName, this.requesterName, this.fallbackToken, this.isBackground}){
-    onInit();
-  }
+  MobileIncomingCallController({this.channelName, this.requesterName, this.fallbackToken, this.isBackground});
 
   @override
   onInit() async {
     super.onInit();
     logYellow("MobileIncomingCallController init");
-    final arguments = Get.arguments;
-    channelName = arguments[0];
-    requesterName = arguments[1];
-    fallbackToken = arguments[2];
-    isBackground = arguments[3];
+    isBackground == null? isBackground = false : isBackground = isBackground;
+    if(!isBackground!){
+      final arguments = Get.arguments;
+      channelName = arguments[0];
+      requesterName = arguments[1];
+      fallbackToken = arguments[2];
+      isBackground = arguments[3];
+    }
     logPink(channelName!);
     logPink(requesterName!);
     logPink(fallbackToken!);
@@ -57,10 +57,6 @@ class MobileIncomingCallController extends GetxController {
     repeatCount.value = 120;
     logYellow("MobileIncomingCallController close");
     stopAudio();
-    CancelCall(
-      remoteDeviceToken: fallbackToken!, 
-      channelName: channelName!
-    );
     if(isBackground == true){
       Get.offAll(()=>MobileHomeView());
     }else{

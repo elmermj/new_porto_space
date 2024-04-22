@@ -12,32 +12,32 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL = "incoming_call_channel"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "incoming_call_channel").setMethodCallHandler { call, result ->
-            if (call.method == "startIncomingCallActivity") {
-                val body = call.argument<String>("body")
-                val channelName = call.argument<String>("channelName")
-                val requesterName = call.argument<String>("requesterName")
-                val fallbackToken = call.argument<String>("fallbackToken")
-                startIncomingCallActivity(body, channelName, requesterName, fallbackToken)
-                result.success(null)
-            } else {
-                result.notImplemented()
-            }
+      super.configureFlutterEngine(flutterEngine)
+      MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "incoming_call_channel").setMethodCallHandler { call, result ->
+        if (call.method == "startIncomingCallActivity") {
+          val body = call.argument<String>("body")
+          val channelName = call.argument<String>("channelName")
+          val requesterName = call.argument<String>("requesterName")
+          val fallbackToken = call.argument<String>("fallbackToken")
+          startIncomingCallActivity(body, channelName, requesterName, fallbackToken)
+          result.success(null)
+        } else {
+          result.notImplemented()
         }
+      }
     }
 
     private fun startIncomingCallActivity(
-        body: String?,
-        channelName: String?,
-        requesterName: String?,
-        fallbackToken: String?
+      body: String?,
+      channelName: String?,
+      requesterName: String?,
+      fallbackToken: String?
     ) {
-        val intent = Intent(applicationContext, IncomingCallActivity::class.java)
-        intent.putExtra("body", body)
-        intent.putExtra("channelName", channelName)
-        intent.putExtra("requesterName", requesterName)
-        intent.putExtra("fallbackToken", fallbackToken)
-        startActivity(intent)
+      val intent = Intent(applicationContext, IncomingCallActivity::class.java)
+      intent.putExtra("body", body)
+      intent.putExtra("channelName", channelName)
+      intent.putExtra("requesterName", requesterName)
+      intent.putExtra("fallbackToken", fallbackToken)
+      startActivity(intent)
     }
 }

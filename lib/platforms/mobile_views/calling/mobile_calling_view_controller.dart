@@ -3,22 +3,25 @@ import 'package:new_porto_space/main.dart';
 
 class MobileCallingViewController extends GetxController {
   String? channelName;
-  String? requesterName;
+  String? receiverName;
   String? fallbackToken;
+  String? remoteDeviceToken;
 
-  MobileCallingViewController({this.channelName, this.requesterName, this.fallbackToken}){
-    onInit();
-  }
+  MobileCallingViewController({this.channelName, this.receiverName, this.fallbackToken, this.remoteDeviceToken});
+
   @override
-    onInit() {
+  onInit() {
     super.onInit();
     logYellow("Calling view controller init");
     final arguments = Get.arguments;
+    logPink(arguments.toString());
     channelName = arguments[0];
-    requesterName = arguments[1]; 
+    receiverName = arguments[1];
     fallbackToken = arguments[2];
+    remoteDeviceToken = arguments[3];
     logPink(channelName!);
-    logPink(requesterName!);
+    logPink(receiverName!);
     logPink(fallbackToken!);
   }
+
 }

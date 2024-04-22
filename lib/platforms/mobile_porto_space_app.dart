@@ -32,7 +32,7 @@ class MobilePortoSpaceApp extends StatelessWidget {
         darkTheme: ThemeData.dark(useMaterial3: true),
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
-        home: MobileIncomingCallView(isFromTerminated: true, remoteMessage: remoteMessage!, message: remoteMessage!.notification!.body,),
+        home: MobileIncomingCallView(isFromTerminated: isIncomingCall, remoteMessage: remoteMessage!, message: remoteMessage!.notification!.body,),
         initialRoute: '/',
         routes: {
           '/calling': (context) => MobileCallingView(),

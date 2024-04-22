@@ -5,13 +5,16 @@ import 'package:new_porto_space/main.dart';
 abstract class Execute {
   final String instance;
 
-  Execute({required this.instance});
+  Execute({required this.instance}){
+    executeWithCatchError(instance);
+  }
+
   execute();
 
   executeWithCatchError(String instance) {
     try {
       execute();
-    } catch (error) {
+    } on Exception catch (error) {
       catchError(instance, error);
     }
   }

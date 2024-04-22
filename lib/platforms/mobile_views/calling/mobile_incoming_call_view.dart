@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:new_porto_space/platforms/mobile_views/call/mobile_video_call_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/call/use_cases/accept_call.dart';
-import 'package:new_porto_space/platforms/mobile_views/call/use_cases/cancel_call.dart';
+import 'package:new_porto_space/platforms/mobile_views/call/use_cases/terminate_call.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view.dart';
 
 import 'mobile_incoming_call_controller.dart';
@@ -17,17 +17,18 @@ class MobileIncomingCallView extends GetView<MobileIncomingCallController> {
 
   @override
   Widget build(BuildContext context) {
-    final args = isFromTerminated? ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>:null;
-    final body = args?['body'].toString();
-    final channelName = args?['channelName'].toString();
-    final requesterName = args?['requesterName'].toString();
-    final fallbackToken = args?['fallbackToken'].toString();
+    final args = isFromTerminated? remoteMessage:Get.arguments;
+    final body = message;
+    final channelName = isFromTerminated? remoteMessage!.data['channelName'] : args[0];
+    final requesterName = isFromTerminated? remoteMessage!.data['requesterName'] : args[1];
+    final fallbackToken = isFromTerminated? remoteMessage!.data['fallbackToken'] : args[2];
 
     final MobileIncomingCallController controller = isFromTerminated? Get.put(MobileIncomingCallController(
       channelName: channelName,
       fallbackToken: fallbackToken,
-      requesterName: requesterName
-    )):Get.put(MobileIncomingCallController());
+      requesterName: requesterName,
+      isBackground: isFromTerminated
+    )):Get.put(MobileIncomingCallController(isBackground: isFromTerminated));
 
     return Scaffold(
       body: Container(
@@ -42,9 +43,10 @@ class MobileIncomingCallView extends GetView<MobileIncomingCallController> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           FloatingActionButton(
+            heroTag:'terminateCall',
             onPressed: () {
               controller.repeatCount.value = 60;
-              CancelCall(
+              TerminateCall(
                 remoteDeviceToken: controller.fallbackToken!,
                 channelName: controller.channelName!,
               );
@@ -54,6 +56,7 @@ class MobileIncomingCallView extends GetView<MobileIncomingCallController> {
             child: const Icon(LucideIcons.phoneOff),
           ),
           FloatingActionButton(
+            heroTag: 'acceptCall',
             onPressed: () {
               AcceptCall(
                 remoteDeviceToken: controller.fallbackToken!,

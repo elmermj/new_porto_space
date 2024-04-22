@@ -19,17 +19,10 @@ class SendCallNotification extends Execute {
     required this.channelName,
     required this.senderName, 
     super.instance = 'SendCallNotification'
-  }){
-    execute();
-  }
+  });
 
   @override
-  execute() {
-    executeWithCatchError(super.instance);
-  }
-
-  @override
-  executeWithCatchError(String instance) async {
+  execute() async {
     logPink("sendCallNotification");
     String url = APIURL.getSendCallNotificationURL();
     Map<String, String> requestBody = {
@@ -37,6 +30,7 @@ class SendCallNotification extends Execute {
       'requesterName' : senderName,
       'receiverDeviceToken': remoteDeviceToken,
       'channelName': channelName,
+      'channelId': APIURL.getAppChannelID()
     };
 
     final response = await http.post(

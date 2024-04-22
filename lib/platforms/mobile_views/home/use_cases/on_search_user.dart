@@ -26,17 +26,10 @@ class OnSearchUsers extends Execute {
     required this.storage,
     required this.store,
     super.instance = 'OnSearchUsers'
-  }){
-    execute();
-  }
+  });
 
   @override
   execute() async {
-    await executeWithCatchError(super.instance);
-  }
-
-  @override
-  executeWithCatchError(String instance) async {
     logYellow("onSearchUsers");
     userIds.clear();
     userAccountModelsFromSearch.clear();
@@ -99,7 +92,7 @@ class OnSearchUsers extends Execute {
     if(userIds.isEmpty){
       showSnackBar(title: "Finished!", message: "No person with that name", duration: const Duration(seconds: 2));
     }else{
-      showSnackBar(title: "Finished!", message: "Here's the result", duration: const Duration(seconds: 2));
+      showSnackBar(title: "Finished!", message: "Here's the result", duration: const Duration(seconds: 1));
     }
     
   }
