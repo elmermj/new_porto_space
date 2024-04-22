@@ -20,7 +20,7 @@ class TerminateCall extends Execute {
   execute() async {
     AudioPlayer().play(AssetSource('sounds/negative.wav'));
     logYellow(instance);
-    String url = APIURL.getSendTerminateCallNotificationURL();
+    String url = APIURL.getSendCancelCallNotificationURL();
     Map<String, String> requestBody = {
       'receiverDeviceToken': remoteDeviceToken,
       'channelName': channelName,

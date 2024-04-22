@@ -18,7 +18,9 @@ class SendLogoutNotificationToOldDevice extends Execute{
 
   @override
   execute() async {
+
     String url = APIURL.getSendNotificationURL();
+
     Map<String, String> requestBody = {
       'oldDeviceToken': userData.value.deviceToken!,
       'newDeviceToken': currentFCMToken.value,
@@ -38,5 +40,7 @@ class SendLogoutNotificationToOldDevice extends Execute{
     } else {
       logRed('Failed to send notification. Status code: ${response.statusCode}');
     }
+
   }
+  
 }
