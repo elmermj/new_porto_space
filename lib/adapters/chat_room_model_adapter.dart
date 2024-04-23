@@ -1,9 +1,10 @@
 import 'package:hive/hive.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
+import 'package:new_porto_space/utils/type_id.dart';
 
 class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel>{
   @override
-  final typeId = 1;
+  final typeId = TypeID.chatRoomModel;
 
   @override
   ChatRoomModel read(BinaryReader reader) {

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:new_porto_space/adapters/chat_room_model_adapter.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
+import 'package:new_porto_space/adapters/user_account_model_adapter.dart';
 import 'package:new_porto_space/firebase_options.dart';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/models/user_account_model.dart';

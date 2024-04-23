@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:new_porto_space/adapters/chat_room_model_adapter.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
+import 'package:new_porto_space/adapters/user_account_model_adapter.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
 import 'package:new_porto_space/notification/on_message.dart';
 import 'package:new_porto_space/notification/on_message_opened.dart';

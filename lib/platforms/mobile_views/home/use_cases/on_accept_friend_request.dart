@@ -43,13 +43,13 @@ class OnAcceptFriendRequest extends Execute{
     var batch = store.batch();
 
     batch.set(
-      store.collection('users').doc(userUID).collection('friends').doc(Timestamp.now().toString()),
-      {'friendID': remoteUserUID}
+      store.collection('users').doc(userUID).collection('friends').doc(remoteUserUID),
+      {'time': Timestamp.now()}
     );
 
     batch.set(
-      store.collection('users').doc(remoteUserUID).collection('friends').doc(Timestamp.now().toString()),
-      {'friendID': userUID}
+      store.collection('users').doc(remoteUserUID).collection('friends').doc(userUID),
+      {'time': Timestamp.now()}
     );
 
     batch.delete(
@@ -60,7 +60,10 @@ class OnAcceptFriendRequest extends Execute{
       store.collection('users').doc(remoteUserUID).collection('friend_requests').doc(userUID)
     );
 
-    await batch.commit().then((value) => confirmed=true);
+    await batch.commit().then((value) {
+      confirmed=true;
+      
+    });
 
     if(response.statusCode == 200 && confirmed){
       logGreen('Notification sent successfully');
