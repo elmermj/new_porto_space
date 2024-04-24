@@ -23,7 +23,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl:
   auto_size_text:
-  syncfusion_flutter_calendar: ^22.2.8
   http:
   connectivity:
   flutter_typeahead: ^4.3.3
@@ -39,7 +38,6 @@ dependencies:
   path_provider: ^2.0.12
   flutter_local_notifications:
   rxdart: ^0.27.7
-  onesignal_flutter: ^5.0.3
   crypto: ^3.0.1
   pointycastle: ^3.1.1
   rsa_encrypt: ^2.0.0
@@ -80,3 +78,4 @@ flutter:
     - assets/sounds/magicmarimba.wav
     - assets/sounds/negative.wav
     - assets/sounds/positive.wav
+    - assets/sounds/incoming_call_bell.wav

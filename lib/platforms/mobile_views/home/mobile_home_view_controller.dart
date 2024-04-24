@@ -29,6 +29,7 @@ class MobileHomeViewController extends GetxController {
   RxInt resultCount = 0.obs;
 
   RxList<String> userIds = <String>[].obs;
+  RxList<int> types = <int>[].obs;
 
   RxList<UserAccountModel> userAccountModelsFromSearch = <UserAccountModel>[].obs;
 

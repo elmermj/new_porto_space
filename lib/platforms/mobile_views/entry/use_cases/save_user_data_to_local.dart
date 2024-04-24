@@ -9,14 +9,9 @@ class SaveUserDataToLocal extends Execute{
   final Rx<UserAccountModel> userData;
 
   SaveUserDataToLocal({required this.id, required this.userData, super.instance = 'SaveUserDataToLocal'});
-  
-  @override
-  execute() async {
-    await executeWithCatchError(super.instance);
-  }
 
   @override
-  executeWithCatchError(String instance) async {
+  execute() async {
     logYellow('saving to local...');
     final userDataBox = await Hive.openBox<UserAccountModel>('userData');
     await userDataBox.put("${id}_accountData", userData.value);

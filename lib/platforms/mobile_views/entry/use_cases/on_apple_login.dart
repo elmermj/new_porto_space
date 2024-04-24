@@ -12,11 +12,6 @@ class OnAppleLogin extends Execute{
 
   @override
   execute() async {
-    await executeWithCatchError(super.instance);
-  }
-
-  @override
-  executeWithCatchError(String instance) async {
     logYellow("onAppleLogin");
     showSnackBar(
       title: "Logging In...",

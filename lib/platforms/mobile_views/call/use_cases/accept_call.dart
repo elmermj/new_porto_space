@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
 import 'package:new_porto_space/main.dart';
+import 'package:new_porto_space/platforms/mobile_views/calling/mobile_calling_view.dart';
 import 'package:new_porto_space/secret_url.dart';
 import 'package:new_porto_space/utils/execute.dart';
 import 'package:http/http.dart' as http;
@@ -13,22 +15,16 @@ class AcceptCall extends Execute {
     required this.remoteDeviceToken,
     required this.channelName,
     super.instance = 'AcceptCall'
-  }){
-    execute();
-  }
+  });
 
   @override
   execute() async {
-    await executeWithCatchError(super.instance);
-  }
-
-  @override
-  executeWithCatchError(String instance) async {
     logYellow("acceptCall");
     String url = APIURL.getSendAcceptCallNotificationURL();
     Map<String, String> requestBody = {
       'receiverDeviceToken': remoteDeviceToken,
       'channelName': channelName,
+      'channelId': APIURL.getAppChannelID()
     };
 
     final response = await http.post(
@@ -41,6 +37,13 @@ class AcceptCall extends Execute {
 
     if (response.statusCode == 200) {
       logGreen('Notification sent successfully');
+      Get.off(
+        ()=> MobileCallingView(),
+        arguments: [
+          channelName,
+          remoteDeviceToken,
+        ]
+      );
     } else {
       logRed('Failed to send notification. Status code: ${response.statusCode}');
     }

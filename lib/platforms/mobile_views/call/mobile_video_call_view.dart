@@ -9,45 +9,47 @@ class MobileVideoCallView extends GetView<MobileCallController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        //agora video call UI
-        children: [
-          AgoraVideoView(
-            controller: VideoViewController(
-              rtcEngine: controller.engine,
-              canvas: const VideoCanvas(uid: 0),
-              useFlutterTexture: controller.isUseFlutterTexture,
-              useAndroidSurfaceView: controller.isUseAndroidSurfaceView,
+      body: Obx(
+        ()=> Stack(
+          //agora video call UI
+          children: [
+            AgoraVideoView(
+              controller: VideoViewController(
+                rtcEngine: controller.engine,
+                canvas: const VideoCanvas(uid: 0),
+                useFlutterTexture: controller.isUseFlutterTexture,
+                useAndroidSurfaceView: controller.isUseAndroidSurfaceView,
+              ),
+              onAgoraVideoViewCreated: (viewId) {
+                controller.engine.startPreview();
+              },
             ),
-            onAgoraVideoViewCreated: (viewId) {
-              controller.engine.startPreview();
-            },
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.of(controller.remoteUid.map(
-                  (e) => SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: AgoraVideoView(
-                      controller: VideoViewController.remote(
-                        rtcEngine: controller.engine,
-                        canvas: VideoCanvas(uid: e),
-                        connection:
-                            RtcConnection(channelId: controller.controller.text),
-                        useFlutterTexture: controller.isUseFlutterTexture,
-                        useAndroidSurfaceView: controller.isUseAndroidSurfaceView,
+            Align(
+              alignment: Alignment.topLeft,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.of(controller.remoteUid.map(
+                    (e) => SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: AgoraVideoView(
+                        controller: VideoViewController.remote(
+                          rtcEngine: controller.engine,
+                          canvas: VideoCanvas(uid: e),
+                          connection:
+                              RtcConnection(channelId: controller.controller.text),
+                          useFlutterTexture: controller.isUseFlutterTexture,
+                          useAndroidSurfaceView: controller.isUseAndroidSurfaceView,
+                        ),
                       ),
                     ),
-                  ),
-                )),
+                  )),
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

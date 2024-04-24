@@ -16,17 +16,10 @@ class OnGoogleLogin extends Execute {
   final GoogleSignIn googleSignIn;
   final FirebaseAuth auth;
 
-  OnGoogleLogin({required this.googleSignIn, required this.auth, super.instance = 'OnGoogleLogin'}){
-    execute();
-  }
+  OnGoogleLogin({required this.googleSignIn, required this.auth, super.instance = 'OnGoogleLogin'});
 
   @override
   execute() async {
-    await executeWithCatchError(super.instance);
-  }
-
-  @override
-  executeWithCatchError(String instance) async {
     logYellow("onGoogleLogin");
     showSnackBar(
       title: "Logging In...", 
@@ -75,7 +68,7 @@ class OnGoogleLogin extends Execute {
         'email': user.email,
         'createdAt': FieldValue.serverTimestamp(),
         'lastLoginAt': FieldValue.serverTimestamp(),
-        'deviceToken': deviceToken.value
+        'deviceToken': currentFCMToken.value
       });
 
       await users.doc(user.uid).get().then((DocumentSnapshot doc) async {
@@ -125,14 +118,14 @@ class OnGoogleLogin extends Execute {
           createdAt: data['createdAt'] as Timestamp?,
         );
         userData.value = temp;
-        if(userData.value.deviceToken != deviceToken.value && userData.value.deviceToken!= null) {
-          SendLogoutNotificationToOldDevice(newDeviceToken: deviceToken.value, oldDeviceToken: userData.value.deviceToken!);
+        if(userData.value.deviceToken != currentFCMToken.value && userData.value.deviceToken!= null) {
+          SendLogoutNotificationToOldDevice(newDeviceToken: currentFCMToken.value, oldDeviceToken: userData.value.deviceToken!);
         }
         await users.doc(user.uid).update({
           'lastLoginAt': FieldValue.serverTimestamp(),
-          'deviceToken': deviceToken.value
+          'deviceToken': currentFCMToken.value
         });
-        userData.value.deviceToken = deviceToken.value;
+        userData.value.deviceToken = currentFCMToken.value;
         userData.value.lastLoginAt = Timestamp.now();
         SaveUserDataToLocal(id: user.uid, userData: userData).execute();
       });

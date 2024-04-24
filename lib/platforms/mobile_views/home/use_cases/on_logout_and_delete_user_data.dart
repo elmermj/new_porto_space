@@ -8,17 +8,10 @@ import 'package:new_porto_space/utils/execute.dart';
 
 class OnLogoutAndDeleteUserData extends Execute {
 
-  OnLogoutAndDeleteUserData({super.instance = 'OnLogoutAndDeleteUserData'}){
-    execute();
-  }
+  OnLogoutAndDeleteUserData({super.instance = 'OnLogoutAndDeleteUserData'});
 
   @override
   execute() async {
-    await executeWithCatchError(super.instance);
-  }
-
-  @override
-  executeWithCatchError(String instance) async {
     // Step 1: Logout from Firebase
     await FirebaseAuth.instance.signOut();
 
