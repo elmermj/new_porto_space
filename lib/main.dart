@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:new_porto_space/adapters/chat_room_model_adapter.dart';
+import 'package:new_porto_space/adapters/friend_model_adapter.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
 import 'package:new_porto_space/adapters/user_account_model_adapter.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
@@ -58,6 +59,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserAccountModelAdapter());
   Hive.registerAdapter(ChatRoomModelAdapter());
+  Hive.registerAdapter(FriendModelAdapter());
   Hive.registerAdapter(TimestampAdapter());
   await Hive.openBox<UserAccountModel>('userData');
 
@@ -93,9 +95,9 @@ Future<void> main() async {
   
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  var user = await FirebaseAuth.instance.currentUser?.getIdToken();
-  logYellow('User ID token: $user');
-  if(user!= null){
+  var user = FirebaseAuth.instance.currentUser;
+  if(user!= null){    
+    logYellow('User ID token: ${user.getIdToken()}');
     final userID = FirebaseAuth.instance.currentUser!.uid;
     userData.value = Hive.box<UserAccountModel>('userData').get("${userID}_accountData")!;
     logGreen("SUCCESS RETRIEVING DATA FROM LOCAL STORAGE");

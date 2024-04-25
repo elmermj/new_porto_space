@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:new_porto_space/adapters/chat_room_model_adapter.dart';
+import 'package:new_porto_space/adapters/friend_model_adapter.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
 import 'package:new_porto_space/adapters/user_account_model_adapter.dart';
 import 'package:new_porto_space/firebase_options.dart';
@@ -23,6 +24,7 @@ backgroundNotificationInitialization() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserAccountModelAdapter());
   Hive.registerAdapter(ChatRoomModelAdapter());
+  Hive.registerAdapter(FriendModelAdapter());
   Hive.registerAdapter(TimestampAdapter());
   await Hive.openBox<UserAccountModel>('userData');
 

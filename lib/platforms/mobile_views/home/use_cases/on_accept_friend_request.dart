@@ -62,11 +62,13 @@ class OnAcceptFriendRequest extends Execute{
 
     await batch.commit().then((value) {
       confirmed=true;
-      
+
     });
 
     if(response.statusCode == 200 && confirmed){
       logGreen('Notification sent successfully');
+
+      
       showSnackBar(
         title: 'Connected!', 
         message: "You're now befriended with them", 
