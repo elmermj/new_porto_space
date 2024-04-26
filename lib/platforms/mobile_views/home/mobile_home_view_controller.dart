@@ -60,7 +60,6 @@ class MobileHomeViewController extends GetxController {
     // logGreen(adapterName);
     // logGreen(vara.name);
     try {
-      // Invoke platform channel method to get network info
       String networkInfo = await platform.invokeMethod('getNetworkInfo');
       logGreen(networkInfo);
     } on PlatformException catch (e) {

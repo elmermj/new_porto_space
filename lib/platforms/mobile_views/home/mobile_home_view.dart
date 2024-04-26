@@ -55,6 +55,7 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                   )
                 ),
                 TextButton(
+                  key: const Key("logout_account_button"),
                   onPressed: ()=>OnLogoutAndDeleteUserData(),
                   child: const ListTile(
                     title: Text('Log Out'),

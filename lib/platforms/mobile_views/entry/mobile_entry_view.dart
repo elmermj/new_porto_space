@@ -102,6 +102,7 @@ class MobileEntryView extends GetView<MobileEntryViewController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton(
+                    key: const Key('google_login_button'),
                     onPressed: () => OnGoogleLogin(googleSignIn: controller.googleSignIn, auth: controller.auth), 
                     child: const AutoSizeText(
                       'Sign up with Google'
