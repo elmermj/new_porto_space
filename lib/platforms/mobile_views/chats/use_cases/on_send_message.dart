@@ -29,16 +29,29 @@ class OnSendMessage extends Execute {
     String url = APIURL.getSendMessageNotificationURL();
     String senderEmail = FirebaseAuth.instance.currentUser!.email!;
     String senderName = FirebaseAuth.instance.currentUser!.displayName ?? FirebaseAuth.instance.currentUser!.email!;
-
+    logYellow("ISO 8601 ::: ${DateTime.now().toIso8601String()}");
+    logYellow("NORMAL STR ::: ${DateTime.now()}");
     Map<String, dynamic> requestBody = {
       'message': message.message,
       'receiverDeviceToken': receiverDeviceToken,
+      'timestamp': message.createdAt.toString(),
       'channelId': APIURL.getAppChannelID(),
-      'msgContent': message.toJson(),
+      'msgContent': {
+        'id': message.id,
+        'message': message.message,
+        'createdAt': message.createdAt.toIso8601String(),
+        'sendBy': message.sendBy,
+        'replyMessage': message.replyMessage.toJson(),
+        'reaction': message.reaction.toJson(),
+        'messageType': message.messageType,
+        'voiceMessageDuration': message.voiceMessageDuration,
+        'status': message.status.name
+      },
       'senderEmail': senderEmail,
       'senderName': senderName,
-      'timestamp': DateTime.now().toIso8601String()
     };
+
+    logPink(requestBody.toString());
 
     final response = await http.post(
       Uri.parse(url),
@@ -49,7 +62,7 @@ class OnSendMessage extends Execute {
     ).timeout(
       const Duration(minutes: 1),
       onTimeout: () => showSnackBar(
-        title: 'Call Failed', 
+        title: 'Send Message Failed',
         message: 'Time limit reached', 
         duration: const Duration(milliseconds: 1500)
       ),

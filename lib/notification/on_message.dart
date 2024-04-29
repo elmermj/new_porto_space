@@ -10,6 +10,7 @@ import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/chats/mobile_chat_room_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
 
 onMessage(){
@@ -89,6 +90,15 @@ onMessage(){
             unreadCount: 1,
             roomId: chatRoomWithSenderKey
           ));
+          var controller = Get.find<MobileHomeViewController>();
+          controller.chatRooms.insert(0, ChatRoomModel(
+            lastSenderName: remoteName ?? remoteEmail,
+            lastSenderEmail: remoteEmail,
+            lastSent: timestamp,
+            previewMessage: msgContent.message,
+            unreadCount: 1,
+            roomId: chatRoomWithSenderKey
+          ));
         }else{
           await userChatListBox.close();
           // REMINDER : 
@@ -102,6 +112,15 @@ onMessage(){
             lastSent: timestamp,
             previewMessage: msgContent.message,
             unreadCount: chatRoomWithSender!.unreadCount==null? 1 : (chatRoomWithSender.unreadCount as int) + 1,
+            roomId: chatRoomWithSenderKey
+          ));
+          var controller = Get.find<MobileHomeViewController>();
+          controller.chatRooms.insert(0, ChatRoomModel(
+            lastSenderName: remoteName ?? remoteEmail,
+            lastSenderEmail: remoteEmail,
+            lastSent: timestamp,
+            previewMessage: msgContent.message,
+            unreadCount: chatRoomWithSender.unreadCount==null? 1 : (chatRoomWithSender.unreadCount as int) + 1,
             roomId: chatRoomWithSenderKey
           ));
         }

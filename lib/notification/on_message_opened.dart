@@ -9,6 +9,7 @@ import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/calling/mobile_incoming_call_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/chats/mobile_chat_room_controller.dart';
+import 'package:new_porto_space/platforms/mobile_views/home/mobile_home_view_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_logout_and_delete_user_data.dart';
 
 import '../main.dart';
@@ -63,10 +64,9 @@ onMessageOpened(){
         await audioPlayer.play(AssetSource('sounds/magicmarimba.wav'));
         //save the new message to local based on respective chat rooms. append the new message to the list of messages in the chatroommodel
         String localEmail = FirebaseAuth.instance.currentUser!.email!;
-        Message msgContent = Message.fromJson(message.data['message']);
+        Message msgContent = Message.fromJson(message.data['msgContent']);
         String? remoteName = message.data['senderName'];
         String remoteEmail = message.data['senderEmail'];
-        //parse date from ison 8601 string
         DateTime timestamp = DateTime.parse(message.data['timestamp']);
         String chatRoomWithSenderKey = "${localEmail}_chat_with_$remoteEmail";
 
@@ -92,6 +92,15 @@ onMessageOpened(){
             unreadCount: 1,
             roomId: chatRoomWithSenderKey
           ));
+          var controller = Get.find<MobileHomeViewController>();
+          controller.chatRooms.insert(0, ChatRoomModel(
+            lastSenderName: remoteName ?? remoteEmail,
+            lastSenderEmail: remoteEmail,
+            lastSent: timestamp,
+            previewMessage: msgContent.message,
+            unreadCount: 1,
+            roomId: chatRoomWithSenderKey
+          ));
         }else{
           await userChatListBox.close();
           // REMINDER : 
@@ -107,13 +116,22 @@ onMessageOpened(){
             unreadCount: chatRoomWithSender!.unreadCount==null? 1 : (chatRoomWithSender.unreadCount as int) + 1,
             roomId: chatRoomWithSenderKey
           ));
+          var controller = Get.find<MobileHomeViewController>();
+          controller.chatRooms.insert(0, ChatRoomModel(
+            lastSenderName: remoteName ?? remoteEmail,
+            lastSenderEmail: remoteEmail,
+            lastSent: timestamp,
+            previewMessage: msgContent.message,
+            unreadCount: chatRoomWithSender.unreadCount==null? 1 : (chatRoomWithSender.unreadCount as int) + 1,
+            roomId: chatRoomWithSenderKey
+          ));
         }
         await chatRoomWithSenderBox.close();
 
         var chatRoomMessagesBox = await Hive.openBox<Message>("${chatRoomWithSenderKey}_messages");
         chatRoomMessagesBox.put("${localEmail}_${msgContent.id}", msgContent);
         await chatRoomMessagesBox.close();
-        
+
         if(Get.currentRoute == '/MobileChatRoomView'){
           var controller = Get.find<MobileChatRoomController>();
           controller.chatController.addMessage(msgContent);
