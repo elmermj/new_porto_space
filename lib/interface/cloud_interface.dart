@@ -6,7 +6,7 @@ class CloudInterface {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   getOngoingChat () async {
-    var chatList = await store.collection('users').doc(auth.currentUser!.uid).collection('ongoing-chats').get();
+    // var chatList = await store.collection('users').doc(auth.currentUser!.uid).collection('ongoing-chats').get();
   }
 
 }

@@ -1,7 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:new_porto_space/models/message_model.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 1)
 class ChatRoomModel extends HiveObject {
   @HiveField(0)
   String? roomId;
@@ -10,54 +9,38 @@ class ChatRoomModel extends HiveObject {
   @HiveField(2)
   DateTime? lastSent;
   @HiveField(3)
-  String? lastSenderId;
+  String? lastSenderEmail;
   @HiveField(4)
-  List<MessageModel>? messages;
+  int? unreadCount;
+  @HiveField(5)
+  String? lastSenderName;
+  @HiveField(6)
+  String? remoteName;
+  @HiveField(7)
+  List<String>? profImageUrls;
+  @HiveField(8)
+  List<String>? participantsEmails;
 
   ChatRoomModel({
     this.roomId,
     this.previewMessage,
     this.lastSent,
-    this.lastSenderId,
-    this.messages,
+    this.lastSenderEmail,
+    this.unreadCount,
+    this.lastSenderName,
+    this.remoteName,
+    this.profImageUrls,
+    this.participantsEmails
   });
 
   ChatRoomModel.fromJson(Map<String, dynamic> json) {
     roomId = json['roomId'];
     previewMessage = json['previewMessage'];
     lastSent = json['lastSent'];
-    lastSenderId = json['lastSenderId'];
-    if (json['messages']!= null) {
-      messages = <MessageModel>[];
-      json['messages'].forEach((v) {
-        messages!.add(MessageModel.fromJson(v));
-      });
-    }
-  }
-}
-
-class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel>{
-  @override
-  final typeId = 0;
-
-  @override
-  ChatRoomModel read(BinaryReader reader) {
-    return ChatRoomModel(
-      roomId: reader.read(),
-      previewMessage: reader.read(),
-      lastSent: reader.read(),
-      lastSenderId: reader.read(),
-      messages: reader.read(),
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, ChatRoomModel obj) {
-    writer
-      ..write(obj.roomId)
-      ..write(obj.previewMessage)
-      ..write(obj.lastSent)
-      ..write(obj.lastSenderId)
-      ..write(obj.messages);
+    lastSenderEmail = json['lastSenderId'];
+    lastSenderName = json['lastSenderName'];
+    remoteName = json['remoteName'];
+    profImageUrls = json['profImageUrl'];
+    unreadCount = json['unreadCount'];
   }
 }

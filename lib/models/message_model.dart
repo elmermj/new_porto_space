@@ -1,4 +1,4 @@
-class MessageModel {
+class Message {
   String? messageId;
   String? senderId;
   String? content;
@@ -6,7 +6,7 @@ class MessageModel {
   List<String>? attachementUrl;
   DateTime? sentAt;
 
-  MessageModel({
+  Message({
     required this.messageId,
     required this.senderId,
     required this.content,
@@ -15,7 +15,7 @@ class MessageModel {
     required this.sentAt,
   });
 
-  MessageModel.fromJson(Map<String, dynamic> json){
+  Message.fromJson(Map<String, dynamic> json){
     messageId = json['messageId'];
     senderId = json['senderId'];
     content = json['content'];
