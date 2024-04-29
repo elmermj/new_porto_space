@@ -11,11 +11,14 @@ class MobileSearchViewController extends GetxController{
   RxList<UserAccountModel> userAccounts = <UserAccountModel>[].obs;
   RxList<int> types = <int>[].obs;
   RxBool isMoreThan20Results = false.obs;
+  RxBool isSearching = false.obs;
+  RxString searchTerm = ''.obs;
   RxList<String> idResults = <String>[].obs;
 
   MobileHomeViewController homeController = Get.find<MobileHomeViewController>();
 
   void fetchDataFromHomeController() {
+    isSearching.value = true;
     // Access data from HomeController
     maxIndex = homeController.resultCount.value;
     userAccounts = homeController.userAccountModelsFromSearch;
@@ -30,6 +33,7 @@ class MobileSearchViewController extends GetxController{
     for (var user in userAccounts) {
       logGreen(user.name!); // Assuming UserAccountModel has a 'name' property
     }
+    isSearching.value = false;
   }
 
   void loadMore() async {
@@ -52,6 +56,7 @@ class MobileSearchViewController extends GetxController{
   @override
   void onInit(){
     super.onInit();
+    searchTerm.value = Get.arguments;
     fetchDataFromHomeController();
   }
 

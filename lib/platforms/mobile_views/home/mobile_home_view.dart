@@ -135,7 +135,7 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
                             types: controller.types
                           );
                           // controller.userSearch(value);
-                          Get.to(()=>MobileSearchView());
+                          Get.to(()=>MobileSearchView(), arguments: query);
                         }else{
                           showSnackBar(title: "Invalid Search Term", message: "Please enter a keyword", duration: const Duration(seconds: 2));
                         }
@@ -188,95 +188,177 @@ class MobileHomeView extends GetView<MobileHomeViewController> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextButton(
-                  onPressed: ()=> controller.index.value = 0, 
-                  child: Text(
-                    "Timeline",
-                    style: TextStyle(
-                      color: controller.index.value==0? Colors.lightBlueAccent: Colors.white,
+                Expanded(
+                  flex: 2,
+                  child: TextButton(
+                    onPressed: ()=> controller.index.value = 0, 
+                    child: Text(
+                      "Timeline",
+                      style: TextStyle(
+                        color: controller.index.value==0? Colors.lightBlueAccent: Colors.white,
+                      )
                     )
-                  )
+                  ),
                 ),
-                TextButton(
-                  onPressed: ()=> controller.index.value = 1, 
-                  child: Text(
-                    "Chats",
-                    style: TextStyle(
-                      color: controller.index.value==1? Colors.lightBlueAccent: Colors.white,
+                Expanded(
+                  flex: 2,
+                  child: TextButton(
+                    onPressed: ()=> controller.index.value = 1, 
+                    child: Text(
+                      "Chats",
+                      style: TextStyle(
+                        color: controller.index.value==1? Colors.lightBlueAccent: Colors.white,
+                      )
                     )
-                  )
+                  ),
                 ),
-                TextButton(
-                  onPressed: ()=> controller.index.value = 2, 
-                  child: Text(
-                    "Contacts",
-                    style: TextStyle(
-                      color: controller.index.value==2? Colors.lightBlueAccent: Colors.white,
+                const Expanded(child: SizedBox.expand()),
+                Expanded(
+                  flex: 2,
+                  child: TextButton(
+                    onPressed: ()=> controller.index.value = 2, 
+                    child: Text(
+                      "Contacts",
+                      style: TextStyle(
+                        color: controller.index.value==2? Colors.lightBlueAccent: Colors.white,
+                      )
                     )
-                  )
+                  ),
                 ),
-                TextButton(
-                  onPressed: ()=> controller.index.value = 3, 
-                  child: Text(
-                    "Profile",
-                    style: TextStyle(
-                      color: controller.index.value==3? Colors.lightBlueAccent: Colors.white,
+                Expanded(
+                  flex: 2,
+                  child: TextButton(
+                    onPressed: ()=> controller.index.value = 3, 
+                    child: Text(
+                      "Profile",
+                      style: TextStyle(
+                        color: controller.index.value==3? Colors.lightBlueAccent: Colors.white,
+                      )
                     )
-                  )
+                  ),
                 ),
               ]
             ),
           ),
         ),
-
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.grey[900],
+          foregroundColor: Colors.white,
           shape: const CircleBorder(),
           child: const Icon(LucideIcons.plus),
           onPressed: () {
             showModalBottomSheet(
-              context: context, 
+              isScrollControlled: true,
+              isDismissible: true,
+              showDragHandle: true,
+              context: context,
+              backgroundColor: Colors.grey[900],
               builder: (context) {
-                return SizedBox(
-                  height: Get.height,
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey,
-                              width: 0.5,
-                            )
-                          )
-                        ),
-                        height: kToolbarHeight,
-                        child: const Center(
-                          child: Text("Add something"),
-                        ),
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey,
-                              width: 0.5,
-                            )
-                          )
-                        ),
-                        height: kTextTabBarHeight,
-                        child: const TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "What's on your mind?",
-                          ),
-                          minLines: 6,
-                          maxLines: 18,
-
-                        )
-                      ),
-                    ],
+                return ListView(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(16,0,16,16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            height: kToolbarHeight,
+                            child: Center(
+                              child: Text("Add something", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),),
+                            ),
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                  color: Colors.grey,
+                                  width: 0.25,
+                                )
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                  color: Colors.lightBlueAccent,
+                                  width: 1,
+                                )
+                              ),
+                              hintText: "What's on your mind?",
+                            ),
+                            minLines: 2,
+                            maxLines: 18,
+                          ),
+                          Dismissible(
+                            key: const Key("swipe_to_post"),
+                            direction: DismissDirection.startToEnd,
+                            dismissThresholds: const {
+                              DismissDirection.startToEnd: 0.3,
+                            },
+                            onDismissed: (direction) {
+                              Get.back();
+                              showSnackBar(title: "Posted", message: "Just posted something", duration: const Duration(milliseconds: 800));
+                            },
+                            background: Container(
+                              margin: const EdgeInsets.only(bottom: 8, top: 16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(kToolbarHeight/2),
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    //from light blue accent to soft white
+                                    Color.fromARGB(255, 0, 135, 194),
+                                    Color.fromARGB(255, 44, 171, 225),
+                                    Color.fromARGB(255, 93, 206, 255),
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  tileMode: TileMode.clamp,
+                                  stops: [0.0, 0.8, 1.0],
+                                ) 
+                              ),
+                              height: kTextTabBarHeight * 0.75,
+                              width: Get.width,
+                              child: const Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 16.0),
+                                    child: Text("Release Now", style: TextStyle(color: Colors.white, fontSize: 16),),
+                                  ),
+                                ],
+                              ),
+                            ), 
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 8, top: 16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(kToolbarHeight/2),
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    //from light blue accent to soft white 
+                                    Color.fromARGB(255, 93, 206, 255),
+                                    Color.fromARGB(255, 175, 246, 255),
+                                    Colors.white,
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  tileMode: TileMode.clamp,
+                                  stops: [0.0, 0.8, 1.0],
+                                ) 
+                              ),
+                              height: kTextTabBarHeight * 0.75,
+                              width: Get.width,
+                              child: const Center(child: Text("Slide left to post"))
+                            ),
+                          ),
+                          const SizedBox(height: kToolbarHeight,),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               }
             );

@@ -377,9 +377,28 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                   )
                 ],
               );
+            } else if (controller.isSearching.value == false && controller.idResults.isEmpty) {
+              return Container(
+                width: Get.width,
+                height: Get.height,
+                color: Colors.grey[900],
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text("No results found with keyword '${controller.searchTerm.value}'"),
+                    ],
+                  ),
+                ),
+              );
+              
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Container(
+                width: Get.width,
+                height: Get.height,
+                color: Colors.grey[900],
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
             }
           },
