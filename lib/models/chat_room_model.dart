@@ -1,5 +1,5 @@
+import 'package:chatview/chatview.dart';
 import 'package:hive/hive.dart';
-import 'package:new_porto_space/models/message_model.dart';
 
 @HiveType(typeId: 1)
 class ChatRoomModel extends HiveObject {
@@ -12,7 +12,15 @@ class ChatRoomModel extends HiveObject {
   @HiveField(3)
   String? lastSenderId;
   @HiveField(4)
-  List<MessageModel>? messages;
+  List<Message>? messages;
+  @HiveField(5)
+  String? lastSenderName;
+  @HiveField(6)
+  String? remoteName;
+  @HiveField(7)
+  List<String>? profImageUrls;
+  @HiveField(8)
+  List<String>? participantsEmails;
 
   ChatRoomModel({
     this.roomId,
@@ -20,6 +28,9 @@ class ChatRoomModel extends HiveObject {
     this.lastSent,
     this.lastSenderId,
     this.messages,
+    this.lastSenderName,
+    this.remoteName,
+    this.profImageUrls
   });
 
   ChatRoomModel.fromJson(Map<String, dynamic> json) {
@@ -27,10 +38,13 @@ class ChatRoomModel extends HiveObject {
     previewMessage = json['previewMessage'];
     lastSent = json['lastSent'];
     lastSenderId = json['lastSenderId'];
+    lastSenderName = json['lastSenderName'];
+    remoteName = json['remoteName'];
+    profImageUrls = json['profImageUrl'];
     if (json['messages']!= null) {
-      messages = <MessageModel>[];
+      messages = <Message>[];
       json['messages'].forEach((v) {
-        messages!.add(MessageModel.fromJson(v));
+        messages!.add(Message.fromJson(v));
       });
     }
   }

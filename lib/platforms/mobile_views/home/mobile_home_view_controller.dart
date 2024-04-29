@@ -21,6 +21,7 @@ class MobileHomeViewController extends GetxController {
 
   RxBool isAppBarExpanded = true.obs;
   RxBool isSearchFieldActive = false.obs;
+  RxBool isBusy = false.obs;
 
   RxDouble margin = 0.0.obs;  
   RxDouble marginBodyTop = 0.0.obs;
@@ -30,6 +31,7 @@ class MobileHomeViewController extends GetxController {
 
   RxList<String> userIds = <String>[].obs;
   RxList<int> types = <int>[].obs;
+  RxList<ChatRoomModel> chatRooms = <ChatRoomModel>[].obs;
 
   RxList<UserAccountModel> userAccountModelsFromSearch = <UserAccountModel>[].obs;
 
@@ -77,13 +79,24 @@ class MobileHomeViewController extends GetxController {
     
   }
 
+  getUserChatRoomsData() async {
+    var userChatListBox = await Hive.openBox<List<String>>('${auth.currentUser!.email}_chat_list');
+    List<String> userChatList = userChatListBox.get('${auth.currentUser!.email}_chat_list')!;
+    for(int i = 0; i<userChatList.length; i++){
+      var userChatRoom = await Hive.openBox<ChatRoomModel>(userChatList[i]);
+      chatRooms.add(userChatRoom.get(userChatList[i])!);
+      await userChatRoom.close();
+    }
+    await userChatListBox.close();
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
     logYellow(auth.currentUser!.displayName!);
+    await getUserChatRoomsData();
     initializeScrollListener();
     username.value = auth.currentUser!.displayName!;
-    await Hive.openBox<ChatRoomModel>(auth.currentUser!.uid);
   }
 
   void initializeScrollListener() {

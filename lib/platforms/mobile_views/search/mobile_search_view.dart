@@ -1,10 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:new_porto_space/components/custom_prompt_modal_bottom_sheet.dart';
 import 'package:new_porto_space/main.dart';
+import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/platforms/mobile_views/calling/mobile_calling_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/call/use_cases/send_call_notification.dart';
+import 'package:new_porto_space/platforms/mobile_views/chats/mobile_chat_room_view.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_accept_friend_request.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_block_account.dart';
 import 'package:new_porto_space/platforms/mobile_views/home/use_cases/on_cancel_friend_request.dart';
@@ -184,6 +189,13 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                                         ListTile(
                                           leading: const Icon(LucideIcons.messageCircle),
                                           title: Text('Message ${controller.userAccounts[index].name}'),
+                                          onTap: () async {
+                                            await Hive.openBox<ChatRoomModel>('${FirebaseAuth.instance.currentUser!.email}_chat_with_${controller.userAccounts[index].email}');
+                                            Get.to(
+                                              ()=> MobileChatRoomView(),
+                                              arguments: controller.userAccounts[index]
+                                            );
+                                          },
                                         ),
                                         ListTile(
                                           leading: const Icon(LucideIcons.video),

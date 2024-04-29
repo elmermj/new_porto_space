@@ -1,3 +1,4 @@
+import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_porto_space/constant.dart';
@@ -28,9 +29,17 @@ class MobileChatRoomView extends GetView<MobileChatRoomController> {
                 ],
                 stops: const [1, 0.63, 0.35]
               )
-            )
+            ),
+            child: Obx(
+              ()=> ChatView(
+                chatController: controller.chatController, 
+                currentUser: controller.chatController.chatUsers[0], 
+                chatViewState: controller.isBusy.value? 
+                  ChatViewState.loading : 
+                  controller.isEmpty.value? ChatViewState.noData : ChatViewState.hasMessages,
+              )
+            ),
           ),
-
         ]
       )
     );

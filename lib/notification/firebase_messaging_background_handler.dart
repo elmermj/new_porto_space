@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:new_porto_space/initialization.dart';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/platforms/mobile_porto_space_app.dart';
@@ -56,6 +58,19 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         Get.find<MobileIncomingCallController>().onClose();
         await audioPlayer.stop();
         break;
+
+      case 'New Message':
+        await audioPlayer.play(AssetSource('sounds/magicmarimba.wav'));
+        //save the new message to local based on respective chat rooms. append the new message to the list of messages in the chatroommodel
+        String userEmail = FirebaseAuth.instance.currentUser!.email!;
+        String msgCintent = message.data['msgCintent'];
+        String remoteEmail = message.data['remoteEmail'];
+        //parse date from ison 8601 string
+        DateTime timestamp = DateTime.parse(message.data['timestamp']);
+
+        var userChatListBox = await Hive.openBox<List<String>>('${userEmail}_chat_list');
+
+
       case 'Logout':
         await audioPlayer.play(AssetSource('sounds/negative.wav'));
         OnLogoutAndDeleteUserData();
