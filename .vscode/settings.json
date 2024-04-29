@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
   "java.configuration.updateBuildConfiguration": "automatic",
   "cmake.sourceDirectory": "C:/Elmer Works/private/new_porto_space/windows/flutter"
+=======
+  "java.configuration.updateBuildConfiguration": "automatic"
+>>>>>>> 97d45a20ec85fb0bb6b9e970313fcf96cb58b4aa
 }

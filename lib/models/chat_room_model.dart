@@ -1,3 +1,4 @@
+import 'package:chatview/chatview.dart';
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 1)
