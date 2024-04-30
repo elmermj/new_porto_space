@@ -2,6 +2,8 @@ import 'package:chatview/chatview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/platforms/mobile_views/chats/mobile_chat_room_controller.dart';
 import 'package:new_porto_space/platforms/mobile_views/chats/use_cases/on_send_message.dart';
 
@@ -18,8 +20,12 @@ class MobileChatRoomView extends GetView<MobileChatRoomController> {
     return Scaffold(
       body: Obx(
         () {
-          if (!controller.isBusy.value) {
+          if (controller.initialized && controller.isBusy.value == false) {
             return ChatView(
+              sendMessageConfig: const SendMessageConfiguration(
+                textFieldBackgroundColor: Colors.black,
+                sendButtonIcon: Icon(LucideIcons.send, color: Colors.lightBlueAccent,)
+              ),
               appBar: AppBar(
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
@@ -39,6 +45,7 @@ class MobileChatRoomView extends GetView<MobileChatRoomController> {
                 backgroundColor: Colors.grey[900],
               ),
               onSendTap: (message, replyMessage, messageType) async {
+                logYellow("RECEIVER DEVICE TOKEN ::: ${controller.remoteDeviceToken}");
                 OnSendMessage(
                   message: Message(
                     id: "${DateTime.now().microsecondsSinceEpoch}",
@@ -48,31 +55,10 @@ class MobileChatRoomView extends GetView<MobileChatRoomController> {
                     replyMessage: replyMessage,
                     messageType: messageType,
                   ),
-                  chatController: controller.chatController, 
                   receiverDeviceToken: controller.remoteDeviceToken!, 
-                  roomId: controller.roomId!
+                  roomId: controller.roomId!,
+                  chatRoomMessagesBox: controller.chatRoomMessagesBox
                 );
-                // Message messageContent = Message(
-                //   id: "${userEmail}_${DateTime.now()}",
-                //   createdAt: DateTime.now(),
-                //   message: message,
-                //   sendBy: userEmail,
-                //   replyMessage: replyMessage,
-                //   messageType: messageType,
-                // );
-                // controller.chatController.addMessage(messageContent);
-
-                // var chatRoomMessagesBox = await Hive.openBox<Message>("${controller.roomId!}_messages");
-                // chatRoomMessagesBox.put("${userEmail}_${DateTime.now()}", messageContent);
-                // await chatRoomMessagesBox.close();
-
-                // Future.delayed(const Duration(milliseconds: 1500), () {
-                //   controller.chatController.initialMessageList.last.setStatus =
-                //       MessageStatus.pending;
-                // });
-                // Future.delayed(const Duration(seconds: 1), () {
-                //   controller.chatController.initialMessageList.last.setStatus = MessageStatus.delivered;
-                // });
               },
               loadingWidget: const CircularProgressIndicator(),
               chatController: controller.chatController, 
@@ -81,7 +67,7 @@ class MobileChatRoomView extends GetView<MobileChatRoomController> {
                 ChatViewState.loading : 
                 controller.isEmpty.value? ChatViewState.noData : ChatViewState.hasMessages,
               chatViewStateConfig: ChatViewStateConfiguration(
-              loadingWidgetConfig: ChatViewStateWidgetConfiguration(
+                loadingWidgetConfig: ChatViewStateWidgetConfiguration(
                   loadingIndicatorColor: Get.iconColor,
                 ),
                 onReloadButtonTap: () {},
@@ -89,6 +75,7 @@ class MobileChatRoomView extends GetView<MobileChatRoomController> {
               chatBackgroundConfig: ChatBackgroundConfiguration(
                 backgroundColor: Colors.grey[900]
               ),
+              
             );
           }else {
             return const Center(

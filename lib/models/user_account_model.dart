@@ -84,4 +84,8 @@ class UserAccountModel extends HiveObject {
     data['createdAt'] = createdAt?? Timestamp.fromDate(DateTime(1970));
     return data;
   }
+
+  factory UserAccountModel.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return UserAccountModel.fromJson(doc.data() as Map<String, dynamic>);
+  }
 }

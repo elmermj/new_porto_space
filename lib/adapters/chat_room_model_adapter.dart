@@ -16,8 +16,9 @@ class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel>{
       unreadCount: reader.read(),
       lastSenderName: reader.read(),
       remoteName: reader.read(),
+      remoteEmail: reader.read(),
+      remoteDeviceToken: reader.read(),
       profImageUrls: reader.read(),
-      participantsEmails: reader.read(),
     );
   }
 
@@ -31,7 +32,8 @@ class ChatRoomModelAdapter extends TypeAdapter<ChatRoomModel>{
       ..write(obj.unreadCount)
       ..write(obj.lastSenderName)
       ..write(obj.remoteName)
-      ..write(obj.profImageUrls)
-      ..write(obj.participantsEmails);
+      ..write(obj.remoteEmail)
+      ..write(obj.remoteDeviceToken)
+      ..write(obj.profImageUrls);
   }
 }

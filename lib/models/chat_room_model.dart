@@ -17,9 +17,11 @@ class ChatRoomModel extends HiveObject {
   @HiveField(6)
   String? remoteName;
   @HiveField(7)
-  List<String>? profImageUrls;
+  String? remoteEmail;
   @HiveField(8)
-  List<String>? participantsEmails;
+  String? remoteDeviceToken;
+  @HiveField(9)
+  List<String>? profImageUrls;
 
   ChatRoomModel({
     this.roomId,
@@ -29,8 +31,9 @@ class ChatRoomModel extends HiveObject {
     this.unreadCount,
     this.lastSenderName,
     this.remoteName,
+    this.remoteEmail,
+    this.remoteDeviceToken,
     this.profImageUrls,
-    this.participantsEmails
   });
 
   ChatRoomModel.fromJson(Map<String, dynamic> json) {
@@ -42,5 +45,7 @@ class ChatRoomModel extends HiveObject {
     remoteName = json['remoteName'];
     profImageUrls = json['profImageUrl'];
     unreadCount = json['unreadCount'];
+    remoteEmail = json['remoteEmail'];
+    remoteDeviceToken = json['remoteDeviceToken'];
   }
 }

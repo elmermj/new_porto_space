@@ -8,8 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:new_porto_space/adapters/chat_reaction_model_adapter.dart';
 import 'package:new_porto_space/adapters/chat_room_model_adapter.dart';
 import 'package:new_porto_space/adapters/friend_model_adapter.dart';
+import 'package:new_porto_space/adapters/message_model_adapter.dart';
+import 'package:new_porto_space/adapters/message_status_enum_adapter.dart';
+import 'package:new_porto_space/adapters/message_type_enum_adapter.dart';
+import 'package:new_porto_space/adapters/reply_message_model_adapter.dart';
 import 'package:new_porto_space/adapters/timestamp_adapter.dart';
 import 'package:new_porto_space/adapters/user_account_model_adapter.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
@@ -56,6 +61,11 @@ initHive() async {
   Hive.registerAdapter(ChatRoomModelAdapter());
   Hive.registerAdapter(FriendModelAdapter());
   Hive.registerAdapter(TimestampAdapter());
+  Hive.registerAdapter(ChatReactionModelAdapter());
+  Hive.registerAdapter(MessageModelAdapter());
+  Hive.registerAdapter(ReplyMessageModelAdapter());
+  Hive.registerAdapter(MessageStatusEnumAdapter());
+  Hive.registerAdapter(MessageTypeEnumAdapter());
 }
 
 Future<void> main() async {
@@ -64,11 +74,7 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  await Hive.initFlutter();
-  Hive.registerAdapter(UserAccountModelAdapter());
-  Hive.registerAdapter(ChatRoomModelAdapter());
-  Hive.registerAdapter(FriendModelAdapter());
-  Hive.registerAdapter(TimestampAdapter());
+  await initHive();
   await Hive.openBox<UserAccountModel>('userData');
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

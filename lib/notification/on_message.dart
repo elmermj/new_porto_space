@@ -91,14 +91,24 @@ onMessage(){
             roomId: chatRoomWithSenderKey
           ));
           var controller = Get.find<MobileHomeViewController>();
-          controller.chatRooms.insert(0, ChatRoomModel(
+          int index = 0;
+          for(int i = 0; i<controller.chatRooms.length; i++){
+            if(controller.chatRooms[i].roomId == chatRoomWithSenderKey){
+              index = i;
+              break;
+            }
+          }
+          //add or update the index of the chatroom in the chatroom list
+          controller.chatRooms[index] = ChatRoomModel(
             lastSenderName: remoteName ?? remoteEmail,
             lastSenderEmail: remoteEmail,
             lastSent: timestamp,
             previewMessage: msgContent.message,
             unreadCount: 1,
             roomId: chatRoomWithSenderKey
-          ));
+          );
+
+          controller.chatRooms.sort((a, b) => b.lastSent!.compareTo(a.lastSent!));
         }else{
           await userChatListBox.close();
           // REMINDER : 
@@ -115,14 +125,24 @@ onMessage(){
             roomId: chatRoomWithSenderKey
           ));
           var controller = Get.find<MobileHomeViewController>();
-          controller.chatRooms.insert(0, ChatRoomModel(
+          int index = 0;
+          for(int i = 0; i<controller.chatRooms.length; i++){
+            if(controller.chatRooms[i].roomId == chatRoomWithSenderKey){
+              index = i;
+              break;
+            }
+          }
+          //add or update the index of the chatroom in the chatroom list
+          controller.chatRooms[index] = ChatRoomModel(
             lastSenderName: remoteName ?? remoteEmail,
             lastSenderEmail: remoteEmail,
             lastSent: timestamp,
             previewMessage: msgContent.message,
             unreadCount: chatRoomWithSender.unreadCount==null? 1 : (chatRoomWithSender.unreadCount as int) + 1,
             roomId: chatRoomWithSenderKey
-          ));
+          );
+
+          controller.chatRooms.sort((a, b) => b.lastSent!.compareTo(a.lastSent!));
         }
         await chatRoomWithSenderBox.close();
 

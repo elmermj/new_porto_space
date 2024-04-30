@@ -377,17 +377,13 @@ class MobileSearchView extends GetView<MobileSearchViewController> {
                   )
                 ],
               );
-            } else if (controller.isSearching.value == false && controller.idResults.isEmpty) {
+            } else if (!controller.initialized && controller.idResults.isEmpty) {
               return Container(
                 width: Get.width,
                 height: Get.height,
                 color: Colors.grey[900],
                 child: Center(
-                  child: Column(
-                    children: [
-                      Text("No results found with keyword '${controller.searchTerm.value}'"),
-                    ],
-                  ),
+                  child: Text("No results found with keyword '${controller.searchTerm.value}'"),
                 ),
               );
               

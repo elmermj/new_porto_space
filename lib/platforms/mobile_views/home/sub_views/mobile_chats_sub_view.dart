@@ -44,12 +44,12 @@ class MobileChatsSubView extends StatelessWidget {
                     return ListTile(
                       title: Text(chatRoom.remoteName!),
                       subtitle: AutoSizeText(
-                        chatRoom.lastSenderEmail == FirebaseAuth.instance.currentUser!.uid? 
+                        chatRoom.lastSenderEmail == FirebaseAuth.instance.currentUser!.email? 
                         "You : ${chatRoom.previewMessage}" :
                         "${chatRoom.lastSenderName} : ${chatRoom.previewMessage}",
                         maxLines: 2,
                       ),
-                      trailing: AutoSizeText(chatRoom.lastSent!.toIso8601String()),
+                      trailing: AutoSizeText(controller.formatTimeDifference(chatRoom.lastSent!, controller.currentDateTime.value)),
                       onTap: () {
                         Get.to(
                           ()=>MobileChatRoomView(),

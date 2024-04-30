@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:new_porto_space/main.dart';
 import 'package:new_porto_space/models/chat_room_model.dart';
 import 'package:new_porto_space/models/user_account_model.dart';
@@ -14,6 +17,8 @@ import '../add_contact/mobile_add_contact_view.dart';
 const platform = MethodChannel('networkInfoChannel');
 
 class MobileHomeViewController extends GetxController {
+
+  Rx<DateTime> currentDateTime = DateTime.now().obs;
 
   //dynamic declaration
   RxString username = ''.obs;
@@ -47,6 +52,7 @@ class MobileHomeViewController extends GetxController {
 
   TextEditingController searchController = TextEditingController();
   ScrollController scrollController = ScrollController();
+  Timer? timer;
 
   onIdSearch(String id) async {
     var res = await store.collection('users').where('id', isEqualTo: id).get();
@@ -81,23 +87,57 @@ class MobileHomeViewController extends GetxController {
 
   getUserChatRoomsData() async {
     logYellow("Getting user chat rooms data from local storage (email : ${auth.currentUser!.email})");
-    var userChatListBox = await Hive.openBox<List<String>>('${auth.currentUser!.email}_chat_list');
+    var userChatListBox = await Hive.openBox<ChatRoomModel>('${auth.currentUser!.email}_chats');
+    logYellow(userChatListBox.name);
     if(userChatListBox.isNotEmpty){
-      List<String> userChatList = userChatListBox.get('${auth.currentUser!.email}_chat_list')!;
-      for(int i = 0; i<userChatList.length; i++){
-        var userChatRoom = await Hive.openBox<ChatRoomModel>(userChatList[i]);
-        chatRooms.add(userChatRoom.get(userChatList[i])!);
-        await userChatRoom.close();
-      }
+      chatRooms.value = userChatListBox.values.toList();
+      logYellow(chatRooms[0].remoteName!);
     }
-    
-    await userChatListBox.close();
+  }
+
+  String formatTimeDifference(DateTime lastSent, DateTime currentTime) {
+    // Calculate the time difference between currentTime and lastSent
+    Duration difference = currentTime.difference(lastSent);
+
+    // Define thresholds for different time units (seconds, minutes, hours, etc.)
+    const int second = 1;
+    const int minute = 60 * second;
+    const int hour = 60 * minute;
+    const int day = 24 * hour;
+    const int week = 7 * day;
+
+    if (difference.inSeconds < 30) {
+      return 'Just now';
+    } else if (difference.inSeconds < minute){
+      return '${difference.inSeconds}s ago';
+    }else if (difference.inSeconds < hour) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inSeconds < day) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inSeconds < week) {
+      return '${difference.inDays}d ago';
+    } else {
+      // Format the date if it's more than a week ago
+      return DateFormat('MMM dd').format(lastSent);
+    }
+  }
+
+  toChatRoom(String remoteEmail) async {
+    //get user data from firebase firestore using email
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    UserAccountModel remoteUserAccountData = UserAccountModel();
+    var docRef = await firestore.collection('users').where('email', isEqualTo: remoteEmail).get();
+    if (docRef.docs.isNotEmpty) {
+      remoteUserAccountData = UserAccountModel.fromDocumentSnapshot(docRef.docs[0]);
+    }
+    return remoteUserAccountData;
   }
 
   @override
   Future<void> onInit() async {
     super.onInit();
     logYellow(auth.currentUser!.displayName!);
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) => currentDateTime.value = DateTime.now());
     await getUserChatRoomsData();
     initializeScrollListener();
     username.value = auth.currentUser!.displayName!;
@@ -123,5 +163,11 @@ class MobileHomeViewController extends GetxController {
     });
   }
 
-
+  @override
+  Future<void> onClose() async {
+    logYellow("MobileHomeViewController close");
+    timer!.cancel();
+    await Hive.close();
+    super.onClose();
+  }
 }
