@@ -27,6 +27,8 @@ class OnGoogleLogin extends Execute {
       duration: const Duration(minutes: 1)
     );
 
+    googleSignIn.signOut();
+
     final GoogleSignInAccount? googleUser = await googleSignIn.signIn().timeout(
       const Duration(seconds: 55),
       onTimeout: () {

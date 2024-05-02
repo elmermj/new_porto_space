@@ -136,7 +136,7 @@ class MobileHomeViewController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    logYellow(auth.currentUser!.displayName!);
+    logYellow("INIT CURRENT USER ::: ${auth.currentUser!.displayName!}");
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) => currentDateTime.value = DateTime.now());
     await getUserChatRoomsData();
     initializeScrollListener();

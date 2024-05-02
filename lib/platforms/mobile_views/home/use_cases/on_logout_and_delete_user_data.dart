@@ -24,7 +24,8 @@ class OnLogoutAndDeleteUserData extends Execute {
         (e) => logRed(e.toString()),
       );
       await userDataBox.close();
+      await userDataBox.clear();
     }
-    Get.offAll(()=>MobileEntryView());
+    Get.off(()=>MobileEntryView());
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:chatview/chatview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,7 +64,10 @@ onMessage(){
         await audioPlayer.play(AssetSource('sounds/magicmarimba.wav'));
         //save the new message to local based on respective chat rooms. append the new message to the list of messages in the chatroommodel
         String localEmail = FirebaseAuth.instance.currentUser!.email!;
-        Message msgContent = Message.fromJson(message.data['msgContent']);
+        logYellow("Message Data ::: ${message.toMap()}");
+        Map<String, dynamic> messageMap = jsonDecode(message.data['msgContent']);
+        logYellow(messageMap['voice_message_duration']);
+        Message msgContent = Message.fromJson(messageMap);
         String? remoteName = message.data['senderName'];
         String remoteEmail = message.data['senderEmail'];
         DateTime timestamp = DateTime.parse(message.data['timestamp']);
