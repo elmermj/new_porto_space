@@ -60,6 +60,7 @@ void main() {
         previewMessage: textMessage,
         lastSent: mockDateTime,
         lastSenderEmail: localEmail,
+        remoteEmail: remoteEmail,
         lastSenderName: 'mr. asd',
         unreadCount: 1,
         profImageUrls: ['asd','fgh'],

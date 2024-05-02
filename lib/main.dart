@@ -166,7 +166,6 @@ getNotificationToken() async {
 }
 
 Future<void> requestPermissions() async {
-  // Request permissions for camera, storage, microphone, etc.
   Map<Permission, PermissionStatus> statuses = await [
     Permission.camera,
     Permission.storage,
